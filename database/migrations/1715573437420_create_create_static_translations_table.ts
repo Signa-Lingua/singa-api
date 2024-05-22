@@ -7,8 +7,6 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary().notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      table.string('title').notNullable()
-      table.string('video').notNullable()
       table.string('video_url').notNullable()
 
       table.timestamp('created_at')
@@ -16,7 +14,6 @@ export default class extends BaseSchema {
 
       // index
       table.index(['id'], 'static_translations_id_index')
-      table.index(['user_id'], 'static_translations_user_id_index')
     })
   }
 

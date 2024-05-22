@@ -7,14 +7,12 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary().notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      table.string('title').notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
 
       // index
       table.index(['id'], 'conversation_translations_id_index')
-      table.index(['user_id'], 'conversation_translations_user_id_index')
     })
   }
 

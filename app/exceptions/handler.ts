@@ -2,7 +2,6 @@ import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors as coreError } from '@adonisjs/core'
 import { errors as authError } from '@adonisjs/auth'
-import { errors as dbError } from '@adonisjs/lucid'
 import responseFormatter from '../utils/response_formatter.js'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
@@ -30,12 +29,6 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     if (error instanceof coreError.E_ROUTE_NOT_FOUND) {
       return ctx.response.notFound(
         responseFormatter(404, 'error', 'Route not found, please check the URL')
-      )
-    }
-
-    if (error instanceof dbError.E_ROW_NOT_FOUND) {
-      return ctx.response.notFound(
-        responseFormatter(404, 'error', 'Record not found, please check the params')
       )
     }
 
