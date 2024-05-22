@@ -9,7 +9,7 @@ export default class StaticTranscript extends BaseModel {
   declare staticTranslationId: number
 
   @column()
-  declare ownerId: number
+  declare userId: number
 
   @column()
   declare timestamp: string

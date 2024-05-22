@@ -25,15 +25,6 @@ export default class TestsController {
     // console.log(translation?.serialize())
     // console.log(transcript.map((t) => t.serialize()))
 
-    const q = await User.query()
-      .join('static_translation', 'users.id', 'static_translation.user_id')
-      .join('static_transcript', 'static_translation.id', 'static_transcript.static_translation_id')
-      .select('users.*', 'static_translation.id.*', 'static_transcript.*')
-      .where('id', 1)
-      .first()
-
-    console.log(q)
-
     if (user) {
       console.log('User found')
       // console.log(user.serialize())

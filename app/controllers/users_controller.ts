@@ -39,7 +39,7 @@ export default class UsersController {
 
     const token = await auth.use('jwt').generateWithRefreshToken(user)
 
-    const oldToken = await Authentication.query().where('owner_id', user.id).first()
+    const oldToken = await Authentication.query().where('user_id', user.id).first()
 
     if (oldToken) {
       oldToken.token = token.refreshToken
@@ -47,7 +47,7 @@ export default class UsersController {
     } else {
       await Authentication.create({
         token: token.refreshToken,
-        ownerId: user.id,
+        userId: user.id,
       })
     }
 
