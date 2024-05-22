@@ -12,7 +12,7 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('static_translations')
         .onDelete('CASCADE')
-      table.integer('owner_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.time('timestamp').notNullable().defaultTo('00:00:00')
       table.text('text').notNullable()
 

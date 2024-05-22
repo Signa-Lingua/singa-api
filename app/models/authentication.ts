@@ -6,7 +6,7 @@ export default class Authentication extends BaseModel {
   declare id: number
 
   @column()
-  declare ownerId: number
+  declare userId: number
 
   @column()
   declare token: string

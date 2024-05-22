@@ -12,7 +12,7 @@ export default class ConversationNode extends BaseModel {
   declare conversationTranslationId: number
 
   @column()
-  declare ownerId: number
+  declare userId: number
 
   @column()
   declare videoUrl: string | null

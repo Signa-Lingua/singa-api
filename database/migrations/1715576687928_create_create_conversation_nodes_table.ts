@@ -12,7 +12,7 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('conversation_translations')
         .onDelete('CASCADE')
-      table.integer('owner_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('video_url').nullable()
       table.enum('type', ['speech', 'video']).defaultTo('speech')
 

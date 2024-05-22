@@ -9,7 +9,7 @@ export default class ConversationTranscript extends BaseModel {
   declare conversationNodeId: number
 
   @column()
-  declare ownerId: number
+  declare userId: number
 
   @column()
   declare timestamp: string
