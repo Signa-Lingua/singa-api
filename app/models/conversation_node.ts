@@ -15,6 +15,9 @@ export default class ConversationNode extends BaseModel {
   declare userId: number
 
   @column()
+  declare video: string | null
+
+  @column()
   declare videoUrl: string | null
 
   @column()

@@ -5,14 +5,13 @@ import { fileDeleteValidator, fileUploadValidator } from '#validators/fileupload
 import { HttpContext } from '@adonisjs/core/http'
 import responseFormatter from '../utils/response_formatter.js'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
-import { FfmpegApi } from '../lib/ffmpeg_api.js'
 import vine from '@vinejs/vine'
-import fs from 'node:fs'
 import { nanoid } from 'nanoid'
+import ffmpegService from '#services/ffmpeg_service'
 
 export default class TestsController {
   async test({ request, response }: HttpContext) {
-    const payload = await request.validateUsing(
+    const { file } = await request.validateUsing(
       vine.compile(
         vine.object({
           file: vine.file({
@@ -23,35 +22,31 @@ export default class TestsController {
       )
     )
 
-    const proc = await new FfmpegApi().init()
-    console.log(payload.file.tmpPath!)
-    await proc.resizeVideo(payload.file.tmpPath!)
+    const ffmpegResult = await ffmpegService.resizeVideo(file.tmpPath!)
 
-    fs.existsSync(payload.file.tmpPath! as string)
-      ? console.log('file exists')
-      : console.log('file does not exist')
-    fs.existsSync(proc.resizedVideoPath as string)
-      ? console.log('file exists')
-      : console.log('file does not exist')
-    fs.existsSync(proc.originalVideoPath as string)
-      ? console.log('file exists')
-      : console.log('file does not exist')
+    if (ffmpegResult.error) {
+      return response.internalServerError(responseFormatter(500, 'error', ffmpegResult.message))
+    }
 
-    await googleCloudStorageService.save('test', proc.resizedVideoPath!, `video-${nanoid(16)}.mp4`)
+    // fs.existsSync(ffmpegResult.resizedVideoPath)
+    //   ? console.log(ffmpegResult.resizedVideoPath)
+    //   : console.log('file does not exist')
 
-    proc.cleanup()
+    const uploadedFile = await googleCloudStorageService.save(
+      'test',
+      ffmpegResult.resizedVideoPath,
+      `video-${nanoid(16)}.mp4`
+    )
 
-    setTimeout(() => {
-      fs.existsSync(payload.file.tmpPath! as string)
-        ? console.log('file exists')
-        : console.log('file does not exist')
-      fs.existsSync(proc.resizedVideoPath as string)
-        ? console.log('file exists')
-        : console.log('file does not exist')
-      fs.existsSync(proc.originalVideoPath as string)
-        ? console.log('file exists')
-        : console.log('file does not exist')
-    }, 2000)
+    if (uploadedFile.error) {
+      return response.internalServerError(responseFormatter(500, 'error', uploadedFile.message))
+    }
+
+    ffmpegResult.cleanupFile()
+
+    // fs.existsSync(ffmpegResult.resizedVideoPath)
+    //   ? console.log(ffmpegResult.resizedVideoPath)
+    //   : console.log('file does not exist')
 
     return response.ok(responseFormatter(200, 'success', 'File uploaded'))
   }

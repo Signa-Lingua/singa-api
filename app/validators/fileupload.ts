@@ -15,6 +15,6 @@ export const fileDeleteValidator = vine.compile(
 vine.messagesProvider = new SimpleMessagesProvider({
   'file.required': 'File is required',
   'file.size': 'File size must be less than 2MB',
-  'file.extname': 'File must be one of: jpg, jpeg, png',
+  'file.extname': 'File must be one of: {{extnames}}',
   'fileName.required': 'File name is required',
 })

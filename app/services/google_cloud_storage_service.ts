@@ -15,7 +15,10 @@ class GoogleCloudStorageService {
     try {
       this.#gcloudStorage = await app.container.make('GoogleCloudStorage')
     } catch (error) {
-      console.log('Error: ', error)
+      return {
+        error: true,
+        message: error.message,
+      }
     }
   }
 

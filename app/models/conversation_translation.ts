@@ -10,6 +10,9 @@ export default class ConversationTranslation extends BaseModel {
   @column()
   declare userId: number
 
+  @column()
+  declare title: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
