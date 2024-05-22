@@ -11,6 +11,9 @@ export default class StaticTranslation extends BaseModel {
   declare userId: number
 
   @column()
+  declare title: string
+
+  @column()
   declare videoUrl: string
 
   @column.dateTime({ autoCreate: true })
