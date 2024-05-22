@@ -6,8 +6,7 @@ import * as nanoid from 'nanoid'
 import Authentication from '#models/authentication'
 import { updateUserValidator } from '#validators/user'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
-import { generateAvatarName } from '../utils/generator.js'
-import { SocialProvider } from '../lib/constants/auth.js'
+import generateAvatarName from '../utils/generate_avatar_name.js'
 
 export default class UsersController {
   /**
@@ -19,7 +18,7 @@ export default class UsersController {
     // return all execpt password
     const me = await User.query()
       .where('id', user!)
-      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
+      .select('id', 'name', 'email', 'avatar', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
     if (!me) {
@@ -60,13 +59,13 @@ export default class UsersController {
    * this will handle registering a new user
    */
   async store({ request, response }: HttpContext) {
-    const { name, email, password } = await request.validateUsing(registerValidator)
+    const { name, email, password, providers } = await request.validateUsing(registerValidator)
 
     await User.create({
       name,
       email,
       password,
-      providers: SocialProvider.PASSWORD,
+      providers,
     })
 
     return response.ok(responseFormatter(200, 'success', 'Register success'))
