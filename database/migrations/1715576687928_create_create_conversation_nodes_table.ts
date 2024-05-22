@@ -13,6 +13,7 @@ export default class extends BaseSchema {
         .inTable('conversation_translations')
         .onDelete('CASCADE')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.string('video').nullable()
       table.string('video_url').nullable()
       table.enum('type', ['speech', 'video']).defaultTo('speech')
 
@@ -21,6 +22,11 @@ export default class extends BaseSchema {
 
       // index
       table.index(['id'], 'conversation_nodes_id_index')
+      table.index(
+        ['conversation_translation_id'],
+        'conversation_nodes_conversation_translation_id_index'
+      )
+      table.index(['user_id'], 'conversation_nodes_user_id_index')
     })
   }
 

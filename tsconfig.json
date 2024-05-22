@@ -1,8 +1,10 @@
 {
   "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
+    "resolveJsonModule": true,
     "rootDir": "./",
     "outDir": "./build",
+    "esModuleInterop": true
     // "paths": {
     //   "#controllers/*": ["./app/controllers/*.js"],
     //   "#exceptions/*": ["./app/exceptions/*.js"],
@@ -22,5 +24,5 @@
     //   "#config/*": ["./config/*.js"],
     //   "#lib/*": ["./lib/*.js"],
     // }
-  },
+  }
 }

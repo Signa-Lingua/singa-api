@@ -1,13 +1,12 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, afterFind, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { SocialProvider } from '../lib/constants/auth.js'
 import StaticTranslation from './static_translation.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import env from '#start/env'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -50,13 +49,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
     localKey: 'id',
   })
   declare staticTranslations: HasMany<typeof StaticTranslation>
-
-  @afterFind()
-  static convertAvatarToUrl(user: User) {
-    if (user.avatar) {
-      user.avatar = `${env.get('APP_URL')}/${env.get('DRIVE_NAME')}/avatar/${user.avatar}`
-    }
-  }
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }

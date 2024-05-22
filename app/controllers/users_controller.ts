@@ -5,8 +5,9 @@ import { registerValidator } from '#validators/auth'
 import * as nanoid from 'nanoid'
 import Authentication from '#models/authentication'
 import { updateUserValidator } from '#validators/user'
-import fileService from '#services/file_service'
-import { TFileServiceResult } from '../types/FileService.js'
+import googleCloudStorageService from '#services/google_cloud_storage_service'
+import { generateAvatarName } from '../utils/generator.js'
+import { SocialProvider } from '../lib/constants/auth.js'
 
 export default class UsersController {
   /**
@@ -18,7 +19,7 @@ export default class UsersController {
     // return all execpt password
     const me = await User.query()
       .where('id', user!)
-      .select('id', 'name', 'email', 'avatar', 'isSignUser', 'createdAt', 'updatedAt')
+      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
     if (!me) {
@@ -59,13 +60,13 @@ export default class UsersController {
    * this will handle registering a new user
    */
   async store({ request, response }: HttpContext) {
-    const { name, email, password, providers } = await request.validateUsing(registerValidator)
+    const { name, email, password } = await request.validateUsing(registerValidator)
 
     await User.create({
       name,
       email,
       password,
-      providers,
+      providers: SocialProvider.PASSWORD,
     })
 
     return response.ok(responseFormatter(200, 'success', 'Register success'))
@@ -85,31 +86,35 @@ export default class UsersController {
       return response.badRequest(responseFormatter(400, 'error', 'User not found'))
     }
 
-    let isAvatarFileExist: TFileServiceResult = {
-      error: false,
-      message: '',
-    }
-
     // if user update avatar
     if (avatar) {
       // check if old avatar exists
       if (user.avatar) {
-        const splitAvatar = user.avatar.split('/').pop()
-        isAvatarFileExist = await fileService.isFileExists(splitAvatar!, 'avatar')
+        const result = await googleCloudStorageService.delete('avatar', user.avatar)
 
-        // if old avatar exists
-        if (isAvatarFileExist.error === false) {
-          // delete old avatar
-          await fileService.delete(splitAvatar!, 'avatar')
-        } else {
-          // return error message
-          return response.badRequest(responseFormatter(400, 'error', isAvatarFileExist.message))
+        if (result.error) {
+          return response.internalServerError(responseFormatter(500, 'error', result.message, null))
         }
       }
 
+      const generatedAvatarName = generateAvatarName(
+        user.name,
+        avatar.extname ? avatar.extname : 'jpg'
+      )
+
       // save new avatar
-      const fileName = await fileService.save(avatar, 'avatar')
-      user.avatar = fileName
+      const fileName = await googleCloudStorageService.save(
+        'avatar',
+        avatar.tmpPath!,
+        generatedAvatarName
+      )
+
+      if (fileName.error) {
+        return response.internalServerError(responseFormatter(500, 'error', fileName.message, null))
+      }
+
+      user.avatar = generatedAvatarName
+      user.avatarUrl = fileName.data
     }
 
     user.name = name ?? user.name
@@ -119,7 +124,7 @@ export default class UsersController {
 
     const newUser = await User.query()
       .where('id', userId!)
-      .select('id', 'name', 'email', 'avatar', 'isSignUser', 'createdAt', 'updatedAt')
+      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
     return response.ok(responseFormatter(200, 'success', 'Update user success', newUser))

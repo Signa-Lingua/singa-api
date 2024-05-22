@@ -11,16 +11,23 @@ import { sep, normalize } from 'node:path'
 import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import responseFormatter from '../app/utils/response_formatter.js'
 
+const GoogleAuthsController = () => import('#controllers/google_auths_controller')
 const GithubAuthsController = () => import('#controllers/github_auths_controller')
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
 
 // Tests Routes
-router.get('/', [TestsController, 'test'])
+router.get('/', ({ response }) => {
+  response.ok(responseFormatter(200, 'success', 'Api is up and running'))
+})
+router.post('/test/file', [TestsController, 'test'])
 router.post('/test', [TestsController, 'testFileUpload'])
 router.delete('/test', [TestsController, 'testFileDelete'])
+router.post('/test/gcp', [TestsController, 'testGoogleCloudStorage'])
+router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete'])
 
 // Auth
 router.post('/login', [AuthController, 'create'])
@@ -30,6 +37,10 @@ router.post('/guest', [UsersController, 'create'])
 // Github Auth
 router.get('/login/github', [GithubAuthsController, 'index'])
 router.get('/login/github/callback', [GithubAuthsController, 'store'])
+
+// Google Auth
+router.get('/login/google', [GoogleAuthsController, 'index'])
+router.get('/login/google/callback', [GoogleAuthsController, 'store'])
 
 router
   .group(() => {

@@ -1,49 +1,47 @@
-import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
-import { SocialProvider } from '../lib/constants/auth.js'
 import responseFormatter from '../utils/response_formatter.js'
+import User from '#models/user'
 import Authentication from '#models/authentication'
+import { SocialProvider } from '../lib/constants/auth.js'
 
-export default class GithubAuthsController {
+export default class GoogleAuthsController {
   /**
    * Display a list of resource
-   * this will handle redirecting to github
    */
   async index({ ally }: HttpContext) {
-    return ally.use('github').redirect()
+    return ally.use('google').redirect()
   }
 
   /**
    * Handle form submission for the create action
-   * this will handle creating user with github
    */
   async store({ ally, auth, response }: HttpContext) {
-    const gh = ally.use('github')
+    const google = ally.use('google')
 
-    if (gh.accessDenied()) {
+    if (google.accessDenied()) {
       return response.unauthorized(responseFormatter(401, 'error', 'Unauthorized access'))
     }
 
-    if (gh.stateMisMatch()) {
+    if (google.stateMisMatch()) {
       return response.badRequest(responseFormatter(400, 'error', 'State mis-match'))
     }
 
-    if (gh.hasError()) {
-      const error = gh.getError()
+    if (google.hasError()) {
+      const error = google.getError()
       return response.badRequest(responseFormatter(400, 'error', error ?? 'Unknown error'))
     }
 
-    const ghUser = await gh.user()
+    const googleUser = await google.user()
 
     const user = await User.firstOrCreate(
       {
-        email: ghUser.email,
+        email: googleUser.email,
       },
       {
-        name: ghUser.name,
-        avatarUrl: ghUser.avatarUrl,
-        email: ghUser.email,
-        providers: SocialProvider.GITHUB,
+        name: googleUser.name,
+        avatarUrl: googleUser.avatarUrl,
+        email: googleUser.email,
+        providers: SocialProvider.GOOGLE,
       }
     )
 

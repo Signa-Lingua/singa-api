@@ -1,5 +1,4 @@
-export enum ConversationNodeType {
+export enum TranslationConversationNodeType {
   VIDEO = 'video',
   SPEECH = 'speech',
-  Transcript = 'Transcript',
 }

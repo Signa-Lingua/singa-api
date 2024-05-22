@@ -1,4 +1,3 @@
-import { SocialProvider } from '../lib/constants/auth.js'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export const loginValidator = vine.compile(
@@ -13,7 +12,6 @@ export const registerValidator = vine.compile(
     name: vine.string().minLength(3).maxLength(254),
     email: vine.string().email().minLength(3).maxLength(254),
     password: vine.string().minLength(8).maxLength(64),
-    providers: vine.enum(Array.from(Object.values(SocialProvider))),
   })
 )
 
