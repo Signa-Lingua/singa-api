@@ -8,7 +8,7 @@ export default class StaticTranslation extends BaseModel {
   declare id: number
 
   @column()
-  declare ownerId: number
+  declare userId: number
 
   @column()
   declare videoUrl: string

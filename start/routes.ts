@@ -12,10 +12,12 @@ import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
+const GithubAuthsController = () => import('#controllers/github_auths_controller')
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
 
+// Tests Routes
 router.get('/', [TestsController, 'test'])
 router.post('/test', [TestsController, 'testFileUpload'])
 router.delete('/test', [TestsController, 'testFileDelete'])
@@ -24,6 +26,10 @@ router.delete('/test', [TestsController, 'testFileDelete'])
 router.post('/login', [AuthController, 'create'])
 router.post('/register', [UsersController, 'store'])
 router.post('/guest', [UsersController, 'create'])
+
+// Github Auth
+router.get('/login/github', [GithubAuthsController, 'index'])
+router.get('/login/github/callback', [GithubAuthsController, 'store'])
 
 router
   .group(() => {
