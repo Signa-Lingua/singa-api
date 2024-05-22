@@ -33,6 +33,7 @@ router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete'])
 router.post('/login', [AuthController, 'create'])
 router.post('/register', [UsersController, 'store'])
 router.post('/guest', [UsersController, 'create'])
+router.post('/update-token', [AuthController, 'update'])
 
 // Github Auth
 router.get('/login/github', [GithubAuthsController, 'index'])
