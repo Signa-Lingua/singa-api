@@ -31,6 +31,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare avatar: string | null
 
   @column()
+  declare avatarUrl: string | null
+
+  @column()
   declare isSignUser: boolean
 
   @column()

@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.string('email', 254).nullable().unique()
       table.string('password').nullable()
       table.string('avatar').nullable()
+      table.string('avatar_url').nullable()
       table.boolean('is_sign_user').defaultTo(false)
       table.enum('providers', Object.values(SocialProvider)).nullable()
 
