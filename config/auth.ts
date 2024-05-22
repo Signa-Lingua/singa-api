@@ -1,16 +1,23 @@
 import { defineConfig } from '@adonisjs/auth'
 import { InferAuthEvents, Authenticators } from '@adonisjs/auth/types'
-import { tokensGuard, tokensUserProvider } from '@adonisjs/auth/access_tokens'
+import env from '#start/env'
+import { sessionUserProvider } from '@adonisjs/auth/session'
+import { JwtGuard } from '../app/auth/guards/jwt.js'
+
+const jwtConfig = {
+  secret: env.get('APP_KEY'),
+}
+
+const userProvider = sessionUserProvider({
+  model: () => import('#models/user'),
+})
 
 const authConfig = defineConfig({
-  default: 'api',
+  default: 'jwt',
   guards: {
-    api: tokensGuard({
-      provider: tokensUserProvider({
-        tokens: 'accessTokens',
-        model: () => import('#models/user')
-      }),
-    }),
+    jwt: (ctx) => {
+      return new JwtGuard(ctx, userProvider, jwtConfig)
+    },
   },
 })
 

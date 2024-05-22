@@ -1,4 +1,4 @@
-import { SocialProvider } from '#lib/constants/auth'
+import { SocialProvider } from '../../app/lib/constants/auth.js'
 import StaticTranscript from '#models/static_transcript'
 import StaticTranslation from '#models/static_translation'
 import User from '#models/user'
@@ -71,7 +71,7 @@ export default class extends BaseSeeder {
         staticTranslationId: 2,
         timestamp: '00:00:02',
         text: 'This is a test.',
-      }
+      },
     ])
   }
 }

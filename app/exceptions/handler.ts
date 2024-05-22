@@ -1,5 +1,8 @@
 import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
+import { errors as coreError } from '@adonisjs/core'
+import { errors as authError } from '@adonisjs/auth'
+import responseFormatter from '../utils/response_formatter.js'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -13,6 +16,22 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
+    if (error instanceof authError.E_INVALID_CREDENTIALS) {
+      return ctx.response.badRequest(
+        responseFormatter(400, 'error', 'Unable to find user with provided credentials')
+      )
+    }
+
+    if (error instanceof authError.E_UNAUTHORIZED_ACCESS) {
+      return ctx.response.unauthorized(responseFormatter(401, 'error', 'Unauthorized access'))
+    }
+
+    if (error instanceof coreError.E_ROUTE_NOT_FOUND) {
+      return ctx.response.notFound(
+        responseFormatter(404, 'error', 'Route not found, please check the URL')
+      )
+    }
+
     return super.handle(error, ctx)
   }
 

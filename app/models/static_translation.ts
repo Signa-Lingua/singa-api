@@ -8,20 +8,20 @@ export default class StaticTranslation extends BaseModel {
   declare id: number
 
   @column()
-  declare userId: number
+  declare ownerId: number
 
   @column()
   declare videoUrl: string
-
-  @hasMany(() => StaticTranscript, {
-    foreignKey: 'staticTranslationId',
-    localKey: 'id',
-  })
-  declare staticTranscripts: HasMany<typeof StaticTranscript>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasMany(() => StaticTranscript, {
+    foreignKey: 'staticTranslationId',
+    localKey: 'id',
+  })
+  declare staticTranscripts: HasMany<typeof StaticTranscript>
 }

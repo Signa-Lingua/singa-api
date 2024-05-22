@@ -1,21 +1,15 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-export default class ConversationTranscript extends BaseModel {
+export default class Authentication extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
-
-  @column()
-  declare conversationNodeId: number
 
   @column()
   declare ownerId: number
 
   @column()
-  declare timestamp: string
-
-  @column()
-  declare text: string
+  declare token: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column} from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export default class StaticTranscript extends BaseModel {
   @column({ isPrimary: true })
@@ -7,6 +7,9 @@ export default class StaticTranscript extends BaseModel {
 
   @column()
   declare staticTranslationId: number
+
+  @column()
+  declare ownerId: number
 
   @column()
   declare timestamp: string
