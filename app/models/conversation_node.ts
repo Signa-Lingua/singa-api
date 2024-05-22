@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import { ConversationNodeType } from '../lib/constants/translation.js'
+import { TranslationConversationNodeType } from '../lib/constants/translation.js'
 import ConversationTranscript from './conversation_transcript.js'
 
 export default class ConversationNode extends BaseModel {
@@ -15,10 +15,13 @@ export default class ConversationNode extends BaseModel {
   declare userId: number
 
   @column()
+  declare video: string | null
+
+  @column()
   declare videoUrl: string | null
 
   @column()
-  declare type: ConversationNodeType
+  declare type: TranslationConversationNodeType
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

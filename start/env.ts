@@ -48,8 +48,18 @@ export default await Env.create(new URL('../', import.meta.url), {
   GITHUB_CLIENT_ID: Env.schema.string(),
   GITHUB_CLIENT_SECRET: Env.schema.string(),
   GITHUB_CLIENT_CALLBACK_URL: Env.schema.string(),
-  // GOOGLE_CLIENT_ID: Env.schema.string(),
-  // GOOGLE_CLIENT_SECRET: Env.schema.string(),
+  GOOGLE_CLIENT_ID: Env.schema.string(),
+  GOOGLE_CLIENT_SECRET: Env.schema.string(),
+  GOOGLE_CLIENT_CALLBACK_URL: Env.schema.string(),
   // TWITTER_CLIENT_ID: Env.schema.string(),
   // TWITTER_CLIENT_SECRET: Env.schema.string()
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring google cloud storage
+  |----------------------------------------------------------
+  */
+  GOOGLE_CLOUD_STORAGE_BUCKET_NAME: Env.schema.string(),
+  GOOGLE_CLOUD_STORAGE_STORAGE_PATH: Env.schema.string(),
+  GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE: Env.schema.string(),
 })

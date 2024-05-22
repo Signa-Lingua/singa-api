@@ -11,7 +11,8 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
@@ -42,13 +43,16 @@
     "@japa/plugin-adonisjs": "^3.0.1",
     "@japa/runner": "^3.1.4",
     "@swc/core": "^1.5.3",
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/luxon": "^3.4.2",
     "@types/node": "^20.12.10",
-    "@types/jsonwebtoken": "^9.0.1",
     "eslint": "^8.57.0",
     "hot-hook": "^0.2.5",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "pino-pretty": "^11.0.0",
-    "prettier": "^3.2.5",
+    "prettier": "3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
@@ -58,12 +62,17 @@
     "@adonisjs/core": "^6.9.0",
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^20.6.0",
+    "@google-cloud/storage": "^7.11.0",
+    "@techstark/opencv-js": "^4.9.0-release.3",
+    "@tensorflow/tfjs-node": "^4.19.0",
     "@vinejs/vine": "^2.0.0",
+    "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
     "nanoid": "^5.0.7",
     "pg": "^8.11.5",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "tmp-promise": "^3.0.3"
   },
   "hotHook": {
     "boundaries": [
@@ -74,5 +83,8 @@
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/app"
   },
-  "prettier": "@adonisjs/prettier-config"
+  "prettier": "@adonisjs/prettier-config",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
 }

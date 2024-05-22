@@ -17,6 +17,6 @@ vine.messagesProvider = new SimpleMessagesProvider({
   'avatar.file': 'Invalid avatar (must be type of file)',
   'isSignUser.boolean': 'Invalid isSignUser (must be a boolean)',
   'avatar.size': 'Invalid avatar (must be less than 2mb)',
-  'avatar.extname': 'Invalid avatar (must be one of: ${extnames})',
+  'avatar.extname': 'Invalid avatar (must be one of: {{extnames}})',
   'avatar.required': 'Avatar is required',
 })

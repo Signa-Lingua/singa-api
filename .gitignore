@@ -30,3 +30,6 @@ uploads
 
 # Other
 syncRepo.bat
+
+# Cloud Storage Account Key
+cloud-storage-key.json
