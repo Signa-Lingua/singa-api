@@ -23,3 +23,10 @@ yarn-error.log
 
 # Platform specific
 .DS_Store
+
+# Uploads
+uploads
+./uploads
+
+# Other
+syncRepo.bat

@@ -6,12 +6,21 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary().notNullable()
-      table.integer('static_translation_id').unsigned().references('id').inTable('static_translations').onDelete('CASCADE')
+      table
+        .integer('static_translation_id')
+        .unsigned()
+        .references('id')
+        .inTable('static_translations')
+        .onDelete('CASCADE')
+      table.integer('owner_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.time('timestamp').notNullable().defaultTo('00:00:00')
       table.text('text').notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
+
+      // index
+      table.index(['id'], 'static_transcripts_id_index')
     })
   }
 

@@ -6,12 +6,21 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary().notNullable()
-      table.integer('conversation_translation_id').unsigned().references('id').inTable('conversation_translations').onDelete('CASCADE')
+      table
+        .integer('conversation_translation_id')
+        .unsigned()
+        .references('id')
+        .inTable('conversation_translations')
+        .onDelete('CASCADE')
+      table.integer('owner_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('video_url').nullable()
       table.enum('type', ['speech', 'video']).defaultTo('speech')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
+
+      // index
+      table.index(['id'], 'conversation_nodes_id_index')
     })
   }
 
