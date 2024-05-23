@@ -17,10 +17,7 @@ export const registerValidator = vine.compile(
 
 export const updateAccessTokenValidator = vine.compile(
   vine.object({
-    token: vine.string().exists(async (db, value) => {
-      const token = await db.from('authentications').where('token', value).first()
-      return !!token
-    }),
+    token: vine.string(),
   })
 )
 
