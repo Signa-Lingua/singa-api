@@ -42,7 +42,6 @@ class GoogleCloudStorageService {
       return {
         error: false,
         message: 'File uploaded',
-        // replace %2F with / in publicUrl
         data: publicUrl.replace(/%2F/g, '/'),
       }
     } catch (error) {
