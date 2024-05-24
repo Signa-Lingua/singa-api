@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "repop": "node ace db:wipe && node ace migration:run && node ace db:seed"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
