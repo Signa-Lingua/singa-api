@@ -152,7 +152,16 @@ export default class UsersController {
 
     const newUser = await User.query()
       .where('id', userId!)
-      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
+      .select(
+        'id',
+        'name',
+        'email',
+        'avatarUrl',
+        'isSignUser',
+        'accountType',
+        'createdAt',
+        'updatedAt'
+      )
       .first()
 
     return response.ok(responseFormatter(200, 'success', 'Update user success', newUser))
