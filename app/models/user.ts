@@ -4,7 +4,7 @@ import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import { SocialProvider } from '../lib/constants/auth.js'
+import { SocialProvider } from '#lib/constants/auth'
 import StaticTranslation from './static_translation.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 

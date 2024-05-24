@@ -1,13 +1,13 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
-import responseFormatter from '../utils/response_formatter.js'
+import responseFormatter from '#utils/response_formatter'
 import { registerValidator } from '#validators/auth'
 import * as nanoid from 'nanoid'
 import Authentication from '#models/authentication'
 import { updateUserValidator } from '#validators/user'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
-import { generateAvatarName } from '../utils/generator.js'
-import { SocialProvider } from '../lib/constants/auth.js'
+import { generateAvatarName } from '#utils/generator'
+import { SocialProvider } from '#lib/constants/auth'
 import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import { TranslationConversationNodeType } from '../lib/constants/translation.js'
+import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from './conversation_transcript.js'
 
 export default class ConversationNode extends BaseModel {

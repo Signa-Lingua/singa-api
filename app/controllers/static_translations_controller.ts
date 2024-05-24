@@ -1,9 +1,9 @@
 import StaticTranslation from '#models/static_translation'
 import type { HttpContext } from '@adonisjs/core/http'
-import responseFormatter from '../utils/response_formatter.js'
+import responseFormatter from '#utils/response_formatter'
 import { staticTranslationValidator } from '#validators/static_translation'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
-import { generateFileName } from '../utils/generator.js'
+import { generateFileName } from '#utils/generator'
 
 export default class StaticTranslationsController {
   /**
