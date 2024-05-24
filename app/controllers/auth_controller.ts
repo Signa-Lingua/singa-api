@@ -1,7 +1,7 @@
 import User from '#models/user'
 import { loginValidator, refreshTokenValidator, updateAccessTokenValidator } from '#validators/auth'
 import type { HttpContext } from '@adonisjs/core/http'
-import responseFormatter from '../utils/response_formatter.js'
+import responseFormatter from '#utils/response_formatter'
 import Authentication from '#models/authentication'
 
 export default class AuthController {

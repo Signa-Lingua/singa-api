@@ -1,7 +1,7 @@
 import ffmpeg from 'fluent-ffmpeg'
 import tmp from 'tmp-promise'
 import fs from 'node:fs'
-import { TFfmpegServiceResult } from '../types/FfmpegService.js'
+import { TFfmpegServiceResult } from '#types/FfmpegService'
 
 export async function resizeVideo(
   filePath: string,

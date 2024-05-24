@@ -1,7 +1,7 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
-import { SocialProvider } from '../lib/constants/auth.js'
-import responseFormatter from '../utils/response_formatter.js'
+import { SocialProvider } from '#lib/constants/auth'
+import responseFormatter from '#utils/response_formatter'
 import Authentication from '#models/authentication'
 
 export default class GithubAuthsController {

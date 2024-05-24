@@ -1,5 +1,5 @@
 import env from '#start/env'
-import { TGCPStorage, TGoogleFileServiceResult } from '../types/GoogleCloudStorageService.js'
+import { TGCPStorage, TGoogleFileServiceResult } from '#types/GoogleCloudStorageService'
 import app from '@adonisjs/core/services/app'
 
 class GoogleCloudStorageService {

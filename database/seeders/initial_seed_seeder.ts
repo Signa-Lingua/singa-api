@@ -1,11 +1,11 @@
-import { SocialProvider } from '../../app/lib/constants/auth.js'
+import { SocialProvider } from '#lib/constants/auth'
 import StaticTranscript from '#models/static_transcript'
 import StaticTranslation from '#models/static_translation'
 import User from '#models/user'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import ConversationTranslation from '#models/conversation_translation'
 import ConversationNode from '#models/conversation_node'
-import { TranslationConversationNodeType } from '../../app/lib/constants/translation.js'
+import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from '#models/conversation_transcript'
 
 export default class extends BaseSeeder {

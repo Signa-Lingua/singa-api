@@ -11,7 +11,7 @@ import { sep, normalize } from 'node:path'
 import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import responseFormatter from '../app/utils/response_formatter.js'
+import responseFormatter from '#utils/response_formatter'
 
 const GoogleAuthsController = () => import('#controllers/google_auths_controller')
 const GithubAuthsController = () => import('#controllers/github_auths_controller')

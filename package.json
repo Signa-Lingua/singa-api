@@ -28,11 +28,13 @@
     "#providers/*": "./providers/*.js",
     "#policies/*": "./app/policies/*.js",
     "#abilities/*": "./app/abilities/*.js",
+    "#lib/*": "./app/lib/*.js",
+    "#utils/*": "./app/utils/*.js",
+    "#types/*": "./app/types/*.js",
     "#database/*": "./database/*.js",
     "#start/*": "./start/*.js",
     "#tests/*": "./tests/*.js",
-    "#config/*": "./config/*.js",
-    "#lib/*": "./lib/*.js"
+    "#config/*": "./config/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.5.2",

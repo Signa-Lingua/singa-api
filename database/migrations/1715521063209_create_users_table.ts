@@ -1,4 +1,4 @@
-import { SocialProvider } from '../../app/lib/constants/auth.js'
+import { SocialProvider } from '#lib/constants/auth'
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {

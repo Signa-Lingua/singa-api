@@ -3,7 +3,7 @@
 import fileService from '#services/file_service'
 import { fileDeleteValidator, fileUploadValidator } from '#validators/fileupload'
 import { HttpContext } from '@adonisjs/core/http'
-import responseFormatter from '../utils/response_formatter.js'
+import responseFormatter from '#utils/response_formatter'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import vine from '@vinejs/vine'
 import { nanoid } from 'nanoid'

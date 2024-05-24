@@ -1,7 +1,7 @@
 import env from '#start/env'
 import fs from 'node:fs'
 import { MultipartFile } from '@adonisjs/core/bodyparser'
-import { TFileServiceResult } from '../types/FileService.js'
+import { TFileServiceResult } from '#types/FileService'
 
 class FileService {
   #fs: typeof fs = fs

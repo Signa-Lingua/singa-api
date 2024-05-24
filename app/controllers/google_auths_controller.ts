@@ -1,8 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import responseFormatter from '../utils/response_formatter.js'
+import responseFormatter from '#utils/response_formatter'
 import User from '#models/user'
 import Authentication from '#models/authentication'
-import { SocialProvider } from '../lib/constants/auth.js'
+import { SocialProvider } from '#lib/constants/auth'
 
 export default class GoogleAuthsController {
   /**
