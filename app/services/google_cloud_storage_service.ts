@@ -37,10 +37,12 @@ class GoogleCloudStorageService {
         preconditionOpts: { ifGenerationMatch: generationMatchPrecondition },
       })
 
+      const publicUrl = result[0].publicUrl()
+
       return {
         error: false,
         message: 'File uploaded',
-        data: result[0].metadata.mediaLink!,
+        data: publicUrl.replace(/%2F/g, '/'),
       }
     } catch (error) {
       return {

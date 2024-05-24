@@ -8,6 +8,7 @@ import { updateUserValidator } from '#validators/user'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateAvatarName } from '../utils/generator.js'
 import { SocialProvider } from '../lib/constants/auth.js'
+import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
   /**
@@ -86,6 +87,21 @@ export default class UsersController {
       return response.badRequest(responseFormatter(400, 'error', 'User not found'))
     }
 
+    if (password) {
+      if (user.password) {
+        // compare old password with hashed password
+        const isMatch = await hash.verify(user.password, password)
+
+        if (isMatch) {
+          return response.badRequest(
+            responseFormatter(400, 'error', 'Old password cannot be same as new password')
+          )
+        }
+      }
+
+      user.password = await hash.make(password)
+    }
+
     // if user update avatar
     if (avatar) {
       // check if old avatar exists
@@ -119,7 +135,7 @@ export default class UsersController {
 
     user.name = name ?? user.name
     user.isSignUser = isSignUser ?? user.isSignUser
-    user.password = password ?? user.password
+
     await user.save()
 
     const newUser = await User.query()
