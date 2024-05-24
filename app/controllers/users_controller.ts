@@ -9,7 +9,6 @@ import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateAvatarName } from '../utils/generator.js'
 import { SocialProvider } from '../lib/constants/auth.js'
 import hash from '@adonisjs/core/services/hash'
-import { AccountType } from '../lib/constants/account_type.js'
 
 export default class UsersController {
   /**
@@ -21,16 +20,7 @@ export default class UsersController {
     // return all execpt password
     const me = await User.query()
       .where('id', user!)
-      .select(
-        'id',
-        'name',
-        'email',
-        'avatarUrl',
-        'isSignUser',
-        'accountType',
-        'createdAt',
-        'updatedAt'
-      )
+      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
     if (!me) {
@@ -47,7 +37,6 @@ export default class UsersController {
   async create({ auth, response }: HttpContext) {
     const user = await User.create({
       name: `Guest${nanoid.nanoid(16)}`,
-      accountType: AccountType.GUEST,
     })
 
     const token = await auth.use('jwt').generateWithRefreshToken(user)
@@ -79,7 +68,6 @@ export default class UsersController {
       email,
       password,
       providers: SocialProvider.PASSWORD,
-      accountType: AccountType.DEFAULT,
     })
 
     return response.ok(responseFormatter(200, 'success', 'Register success'))
@@ -154,16 +142,7 @@ export default class UsersController {
 
     const newUser = await User.query()
       .where('id', userId!)
-      .select(
-        'id',
-        'name',
-        'email',
-        'avatarUrl',
-        'isSignUser',
-        'accountType',
-        'createdAt',
-        'updatedAt'
-      )
+      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
     return response.ok(responseFormatter(200, 'success', 'Update user success', newUser))

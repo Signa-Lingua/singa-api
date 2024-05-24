@@ -7,7 +7,6 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { SocialProvider } from '../lib/constants/auth.js'
 import StaticTranslation from './static_translation.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import { AccountType } from '../lib/constants/account_type.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -38,9 +37,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare providers: SocialProvider | null
-
-  @column()
-  declare accountType: AccountType
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

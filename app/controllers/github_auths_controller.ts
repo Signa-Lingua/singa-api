@@ -3,7 +3,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { SocialProvider } from '../lib/constants/auth.js'
 import responseFormatter from '../utils/response_formatter.js'
 import Authentication from '#models/authentication'
-import { AccountType } from '../lib/constants/account_type.js'
 
 export default class GithubAuthsController {
   /**
@@ -45,7 +44,6 @@ export default class GithubAuthsController {
         avatarUrl: ghUser.avatarUrl,
         email: ghUser.email,
         providers: SocialProvider.GITHUB,
-        accountType: AccountType.DEFAULT,
       }
     )
 
