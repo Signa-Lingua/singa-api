@@ -21,7 +21,16 @@ export default class UsersController {
     // return all execpt password
     const me = await User.query()
       .where('id', user!)
-      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
+      .select(
+        'id',
+        'name',
+        'email',
+        'avatarUrl',
+        'isSignUser',
+        'accountType',
+        'createdAt',
+        'updatedAt'
+      )
       .first()
 
     if (!me) {
