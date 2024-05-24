@@ -91,7 +91,8 @@ export default class UsersController {
   async update({ auth, response, request }: HttpContext) {
     const userId = auth.use('jwt').user?.id
 
-    const { name, password, isSignUser, avatar } = await request.validateUsing(updateUserValidator)
+    const { name, email, password, isSignUser, avatar } =
+      await request.validateUsing(updateUserValidator)
 
     const user = await User.query().where('id', userId!).first()
 
@@ -146,6 +147,7 @@ export default class UsersController {
     }
 
     user.name = name ?? user.name
+    user.email = email ?? user.email
     user.isSignUser = isSignUser ?? user.isSignUser
 
     await user.save()

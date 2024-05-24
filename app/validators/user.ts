@@ -3,6 +3,7 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 export const updateUserValidator = vine.compile(
   vine.object({
     name: vine.string().minLength(3).maxLength(254).optional(),
+    email: vine.string().email().minLength(3).maxLength(254).optional(),
     password: vine.string().minLength(8).maxLength(64).confirmed().optional(),
     avatar: vine.file({ size: '2mb', extnames: ['png', 'jpg', 'jpeg'] }).optional(),
     isSignUser: vine.boolean().optional(),
