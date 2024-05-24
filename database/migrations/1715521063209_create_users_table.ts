@@ -1,4 +1,3 @@
-import { AccountType } from '../../app/lib/constants/account_type.js'
 import { SocialProvider } from '../../app/lib/constants/auth.js'
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
@@ -15,7 +14,6 @@ export default class extends BaseSchema {
       table.string('avatar_url').nullable()
       table.boolean('is_sign_user').defaultTo(false)
       table.enum('providers', Object.values(SocialProvider)).nullable()
-      table.enum('account_type', Object.values(AccountType)).defaultTo('default')
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

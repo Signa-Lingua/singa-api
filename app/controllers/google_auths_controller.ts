@@ -3,7 +3,6 @@ import responseFormatter from '../utils/response_formatter.js'
 import User from '#models/user'
 import Authentication from '#models/authentication'
 import { SocialProvider } from '../lib/constants/auth.js'
-import { AccountType } from '../lib/constants/account_type.js'
 
 export default class GoogleAuthsController {
   /**
@@ -43,7 +42,6 @@ export default class GoogleAuthsController {
         avatarUrl: googleUser.avatarUrl,
         email: googleUser.email,
         providers: SocialProvider.GOOGLE,
-        accountType: AccountType.DEFAULT,
       }
     )
 
