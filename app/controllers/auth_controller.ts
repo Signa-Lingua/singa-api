@@ -3,6 +3,7 @@ import { loginValidator, refreshTokenValidator, updateAccessTokenValidator } fro
 import type { HttpContext } from '@adonisjs/core/http'
 import responseFormatter from '#utils/response_formatter'
 import Authentication from '#models/authentication'
+import { HTTP } from '#lib/constants/http'
 
 export default class AuthController {
   /**
@@ -27,7 +28,7 @@ export default class AuthController {
       })
     }
 
-    return response.ok(responseFormatter(200, 'success', 'Login success', token))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Login success', token))
   }
 
   /**
@@ -40,14 +41,18 @@ export default class AuthController {
     const oldToken = await Authentication.query().where('token', token).first()
 
     if (!oldToken) {
-      return response.badRequest(responseFormatter(400, 'error', 'Invalid access token'))
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Invalid access token')
+      )
     }
 
     const user = await auth.use('jwt').getUserByToken(token)
 
     const newToken = await auth.use('jwt').generate(user)
 
-    return response.ok(responseFormatter(200, 'success', 'Update access token success', newToken))
+    return response.ok(
+      responseFormatter(HTTP.OK, 'success', 'Update access token success', newToken)
+    )
   }
 
   /**
@@ -65,11 +70,13 @@ export default class AuthController {
       .first()
 
     if (!token) {
-      return response.badRequest(responseFormatter(400, 'error', 'Invalid refresh token'))
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Invalid refresh token')
+      )
     }
 
     await token.delete()
 
-    return response.ok(responseFormatter(200, 'success', 'Logout success'))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Logout success'))
   }
 }

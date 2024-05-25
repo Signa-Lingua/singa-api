@@ -7,6 +7,7 @@ import {
 } from '#validators/static_translation'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateFileName } from '#utils/generator'
+import { HTTP } from '#lib/constants/http'
 
 export default class StaticTranslationsController {
   /**
@@ -20,7 +21,7 @@ export default class StaticTranslationsController {
       .select('id', 'title', 'videoUrl', 'createdAt', 'updatedAt')
 
     return response.ok(
-      responseFormatter(200, 'success', 'Get list of static translations', staticTranslations)
+      responseFormatter(HTTP.OK, 'success', 'Get list of static translations', staticTranslations)
     )
   }
 
@@ -43,7 +44,9 @@ export default class StaticTranslationsController {
     )
 
     if (fileUrl.error) {
-      return response.internalServerError(responseFormatter(500, 'error', fileUrl.message, null))
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', fileUrl.message, null)
+      )
     }
 
     const staticTranslation = await StaticTranslation.create({
@@ -53,7 +56,12 @@ export default class StaticTranslationsController {
     })
 
     return response.created(
-      responseFormatter(201, 'success', 'Create static translation success', staticTranslation)
+      responseFormatter(
+        HTTP.CREATED,
+        'success',
+        'Create static translation success',
+        staticTranslation
+      )
     )
   }
 
@@ -70,11 +78,13 @@ export default class StaticTranslationsController {
       .first()
 
     if (!staticTranslations) {
-      return response.notFound(responseFormatter(404, 'error', 'Static translation not found'))
+      return response.notFound(
+        responseFormatter(HTTP.NOT_FOUND, 'error', 'Static translation not found')
+      )
     }
 
     return response.ok(
-      responseFormatter(200, 'success', 'Static translation found', staticTranslations)
+      responseFormatter(HTTP.OK, 'success', 'Static translation found', staticTranslations)
     )
   }
 
@@ -92,7 +102,9 @@ export default class StaticTranslationsController {
       .first()
 
     if (!staticTranslation) {
-      return response.notFound(responseFormatter(404, 'error', 'Static translation not found'))
+      return response.notFound(
+        responseFormatter(HTTP.NOT_FOUND, 'error', 'Static translation not found')
+      )
     }
 
     staticTranslation.title = title
@@ -100,7 +112,7 @@ export default class StaticTranslationsController {
     await staticTranslation.save()
 
     return response.ok(
-      responseFormatter(200, 'success', 'Update static translation success', staticTranslation)
+      responseFormatter(HTTP.OK, 'success', 'Update static translation success', staticTranslation)
     )
   }
 
@@ -116,11 +128,13 @@ export default class StaticTranslationsController {
       .first()
 
     if (!staticTranslation) {
-      return response.notFound(responseFormatter(400, 'error', 'Static translation not found'))
+      return response.notFound(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Static translation not found')
+      )
     }
 
     await staticTranslation.delete()
 
-    return response.ok(responseFormatter(200, 'success', 'Delete static translation success'))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Delete static translation success'))
   }
 }

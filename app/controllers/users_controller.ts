@@ -9,6 +9,7 @@ import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateAvatarName } from '#utils/generator'
 import { SocialProvider } from '#lib/constants/auth'
 import hash from '@adonisjs/core/services/hash'
+import { HTTP } from '#lib/constants/http'
 
 export default class UsersController {
   /**
@@ -24,10 +25,10 @@ export default class UsersController {
       .first()
 
     if (!me) {
-      return response.notFound(responseFormatter(404, 'error', 'User not found'))
+      return response.notFound(responseFormatter(HTTP.NOT_FOUND, 'error', 'User not found'))
     }
 
-    return response.ok(responseFormatter(200, 'success', 'Get user success', me))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Get user success', me))
   }
 
   /**
@@ -53,7 +54,7 @@ export default class UsersController {
       })
     }
 
-    return response.ok(responseFormatter(200, 'success', 'Login as guest success', token))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Login as guest success', token))
   }
 
   /**
@@ -70,7 +71,7 @@ export default class UsersController {
       providers: SocialProvider.PASSWORD,
     })
 
-    return response.ok(responseFormatter(200, 'success', 'Register success'))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Register success'))
   }
 
   /**
@@ -85,7 +86,7 @@ export default class UsersController {
     const user = await User.query().where('id', userId!).first()
 
     if (!user) {
-      return response.badRequest(responseFormatter(400, 'error', 'User not found'))
+      return response.badRequest(responseFormatter(HTTP.BAD_REQUEST, 'error', 'User not found'))
     }
 
     if (password) {
@@ -95,7 +96,11 @@ export default class UsersController {
 
         if (isMatch) {
           return response.badRequest(
-            responseFormatter(400, 'error', 'Old password cannot be same as new password')
+            responseFormatter(
+              HTTP.BAD_REQUEST,
+              'error',
+              'Old password cannot be same as new password'
+            )
           )
         }
       }
@@ -110,7 +115,9 @@ export default class UsersController {
         const result = await googleCloudStorageService.delete('avatar', user.avatar)
 
         if (result.error) {
-          return response.internalServerError(responseFormatter(500, 'error', result.message, null))
+          return response.internalServerError(
+            responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', result.message, null)
+          )
         }
       }
 
@@ -127,7 +134,9 @@ export default class UsersController {
       )
 
       if (fileName.error) {
-        return response.internalServerError(responseFormatter(500, 'error', fileName.message, null))
+        return response.internalServerError(
+          responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', fileName.message, null)
+        )
       }
 
       user.avatar = generatedAvatarName
@@ -145,6 +154,6 @@ export default class UsersController {
       .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
-    return response.ok(responseFormatter(200, 'success', 'Update user success', newUser))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Update user success', newUser))
   }
 }

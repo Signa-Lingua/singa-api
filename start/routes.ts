@@ -12,6 +12,7 @@ import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import responseFormatter from '#utils/response_formatter'
+import { HTTP } from '#lib/constants/http'
 
 const GoogleAuthsController = () => import('#controllers/google_auths_controller')
 const GithubAuthsController = () => import('#controllers/github_auths_controller')
@@ -23,7 +24,7 @@ const StaticTranslationsController = () => import('#controllers/static_translati
 
 // Tests Routes
 router.get('/', ({ response }) => {
-  response.ok(responseFormatter(200, 'success', 'Api is up and running'))
+  response.ok(responseFormatter(HTTP.OK, 'success', 'Api is up and running'))
 })
 router.post('/test/file', [TestsController, 'test'])
 router.post('/test', [TestsController, 'testFileUpload'])
