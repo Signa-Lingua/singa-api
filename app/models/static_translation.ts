@@ -30,5 +30,5 @@ export default class StaticTranslation extends BaseModel {
     foreignKey: 'staticTranslationId',
     localKey: 'id',
   })
-  declare staticTranscripts: HasMany<typeof StaticTranscript>
+  declare transcripts: HasMany<typeof StaticTranscript>
 }

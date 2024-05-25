@@ -32,18 +32,6 @@ router.delete('/test', [TestsController, 'testFileDelete'])
 router.post('/test/gcp', [TestsController, 'testGoogleCloudStorage'])
 router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete'])
 
-router
-  .group(() => {
-    // Multiple
-    router.get('/translation/static', [StaticTranslationsController, 'index'])
-    router.post('/translation/static', [StaticTranslationsController, 'store'])
-    // Single
-    router.get('/translation/static/:id', [StaticTranslationsController, 'show'])
-    router.patch('/translation/static/:id', [StaticTranslationsController, 'update'])
-    router.delete('/translation/static/:id', [StaticTranslationsController, 'destroy'])
-  })
-  .use(middleware.auth())
-
 // Auth
 router.post('/login', [AuthController, 'create'])
 router.post('/register', [UsersController, 'store'])
@@ -79,5 +67,13 @@ router
     // Users
     router.get('/users/me', [UsersController, 'index'])
     router.put('/users/me', [UsersController, 'update'])
+
+    // Static Translation Multiple
+    router.get('/translation/static', [StaticTranslationsController, 'index'])
+    router.post('/translation/static', [StaticTranslationsController, 'store'])
+    // Static Translation Single
+    router.get('/translation/static/:id', [StaticTranslationsController, 'show'])
+    router.put('/translation/static/:id', [StaticTranslationsController, 'update'])
+    router.delete('/translation/static/:id', [StaticTranslationsController, 'destroy'])
   })
   .middleware(middleware.auth())
