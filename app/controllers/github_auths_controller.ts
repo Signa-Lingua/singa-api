@@ -3,6 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { SocialProvider } from '#lib/constants/auth'
 import responseFormatter from '#utils/response_formatter'
 import Authentication from '#models/authentication'
+import { HTTP } from '#lib/constants/http'
 
 export default class GithubAuthsController {
   /**
@@ -25,12 +26,14 @@ export default class GithubAuthsController {
     }
 
     if (gh.stateMisMatch()) {
-      return response.badRequest(responseFormatter(400, 'error', 'State mis-match'))
+      return response.badRequest(responseFormatter(HTTP.BAD_REQUEST, 'error', 'State mis-match'))
     }
 
     if (gh.hasError()) {
       const error = gh.getError()
-      return response.badRequest(responseFormatter(400, 'error', error ?? 'Unknown error'))
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', error ?? 'Unknown error')
+      )
     }
 
     const ghUser = await gh.user()
@@ -61,6 +64,6 @@ export default class GithubAuthsController {
       })
     }
 
-    return response.ok(responseFormatter(200, 'success', 'Login success', token))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Login success', token))
   }
 }

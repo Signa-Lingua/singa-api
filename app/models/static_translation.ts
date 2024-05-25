@@ -13,6 +13,10 @@ export default class StaticTranslation extends BaseModel {
   @column()
   declare title: string
 
+  // TODO: Temporary solution. Remove null after implementation
+  @column()
+  declare video: string | null
+
   @column()
   declare videoUrl: string
 

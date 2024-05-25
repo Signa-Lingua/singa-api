@@ -12,6 +12,7 @@ import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import responseFormatter from '#utils/response_formatter'
+import { HTTP } from '#lib/constants/http'
 
 const GoogleAuthsController = () => import('#controllers/google_auths_controller')
 const GithubAuthsController = () => import('#controllers/github_auths_controller')
@@ -19,15 +20,29 @@ const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
 
+const StaticTranslationsController = () => import('#controllers/static_translations_controller')
+
 // Tests Routes
 router.get('/', ({ response }) => {
-  response.ok(responseFormatter(200, 'success', 'Api is up and running'))
+  response.ok(responseFormatter(HTTP.OK, 'success', 'Api is up and running'))
 })
 router.post('/test/file', [TestsController, 'test'])
 router.post('/test', [TestsController, 'testFileUpload'])
 router.delete('/test', [TestsController, 'testFileDelete'])
 router.post('/test/gcp', [TestsController, 'testGoogleCloudStorage'])
 router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete'])
+
+router
+  .group(() => {
+    // Multiple
+    router.get('/translation/static', [StaticTranslationsController, 'index'])
+    router.post('/translation/static', [StaticTranslationsController, 'store'])
+    // Single
+    router.get('/translation/static/:id', [StaticTranslationsController, 'show'])
+    router.patch('/translation/static/:id', [StaticTranslationsController, 'update'])
+    router.delete('/translation/static/:id', [StaticTranslationsController, 'destroy'])
+  })
+  .use(middleware.auth())
 
 // Auth
 router.post('/login', [AuthController, 'create'])

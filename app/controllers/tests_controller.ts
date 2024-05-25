@@ -8,6 +8,7 @@ import googleCloudStorageService from '#services/google_cloud_storage_service'
 import vine from '@vinejs/vine'
 import { nanoid } from 'nanoid'
 import ffmpegService from '#services/ffmpeg_service'
+import { HTTP } from '#lib/constants/http'
 
 export default class TestsController {
   async test({ request, response }: HttpContext) {
@@ -25,7 +26,9 @@ export default class TestsController {
     const ffmpegResult = await ffmpegService.resizeVideo(file.tmpPath!)
 
     if (ffmpegResult.error) {
-      return response.internalServerError(responseFormatter(500, 'error', ffmpegResult.message))
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', ffmpegResult.message)
+      )
     }
 
     // fs.existsSync(ffmpegResult.resizedVideoPath)
@@ -39,7 +42,9 @@ export default class TestsController {
     )
 
     if (uploadedFile.error) {
-      return response.internalServerError(responseFormatter(500, 'error', uploadedFile.message))
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', uploadedFile.message)
+      )
     }
 
     ffmpegResult.cleanupFile()
@@ -48,7 +53,7 @@ export default class TestsController {
     //   ? console.log(ffmpegResult.resizedVideoPath)
     //   : console.log('file does not exist')
 
-    return response.ok(responseFormatter(200, 'success', 'File uploaded'))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'File uploaded'))
   }
 
   async testFileUpload({ request, response }: HttpContext) {
@@ -57,7 +62,7 @@ export default class TestsController {
     const fileName = await fileService.save(file, 'test')
 
     return response.ok(
-      responseFormatter(200, 'success', 'File uploaded', {
+      responseFormatter(HTTP.OK, 'success', 'File uploaded', {
         fileName,
         originalName: file.clientName,
       })
@@ -69,7 +74,7 @@ export default class TestsController {
 
     await fileService.delete(fileName, 'test')
 
-    return response.ok(responseFormatter(200, 'success', 'File deleted'))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'File deleted'))
   }
 
   async testGoogleCloudStorage({ request, response }: HttpContext) {
@@ -78,10 +83,12 @@ export default class TestsController {
     const result = await googleCloudStorageService.save('test', file.tmpPath!, file.clientName)
 
     if (result.error) {
-      return response.internalServerError(responseFormatter(500, 'error', result.message, null))
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', result.message, null)
+      )
     }
 
-    return response.ok(responseFormatter(200, 'success', 'File uploaded', result.data))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'File uploaded', result.data))
   }
 
   async testGoogleCloudStorageDelete({ request, response }: HttpContext) {
@@ -90,9 +97,11 @@ export default class TestsController {
     const result = await googleCloudStorageService.delete('test', fileName)
 
     if (result.error) {
-      return response.internalServerError(responseFormatter(500, 'error', result.message, null))
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', result.message, null)
+      )
     }
 
-    return response.ok(responseFormatter(200, 'success', 'File deleted'))
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'File deleted'))
   }
 }

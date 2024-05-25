@@ -19,7 +19,11 @@ export default class HttpExceptionHandler extends ExceptionHandler {
   async handle(error: unknown, ctx: HttpContext) {
     if (error instanceof authError.E_INVALID_CREDENTIALS) {
       return ctx.response.badRequest(
-        responseFormatter(400, 'error', 'Unable to find user with provided credentials')
+        responseFormatter(
+          HTTP.BAD_REQUEST,
+          'error',
+          'Unable to find user with provided credentials'
+        )
       )
     }
 
@@ -29,13 +33,13 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 
     if (error instanceof coreError.E_ROUTE_NOT_FOUND) {
       return ctx.response.notFound(
-        responseFormatter(404, 'error', 'Route not found, please check the URL')
+        responseFormatter(HTTP.NOT_FOUND, 'error', 'Route not found, please check the URL')
       )
     }
 
     if (error instanceof dbError.E_ROW_NOT_FOUND) {
       return ctx.response.notFound(
-        responseFormatter(404, 'error', 'Record not found, please check the params')
+        responseFormatter(HTTP.NOT_FOUND, 'error', 'Record not found, please check the params')
       )
     }
 
