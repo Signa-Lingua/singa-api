@@ -76,12 +76,8 @@ export default class StaticTranslationsController {
       .where('user_id', userId!)
       .where('id', params.id)
       .select('id', 'title', 'videoUrl', 'createdAt', 'updatedAt')
+      .preload('transcripts', (query) => query.orderBy('timestamp', 'asc'))
       .first()
-
-    const staticTranslationTranscript = await StaticTranscript.query()
-      .where('static_translation_id', params.id)
-      .select('id', 'timestamp', 'text')
-      .orderBy('timestamp', 'asc')
 
     if (!staticTranslations) {
       return response.notFound(
@@ -90,10 +86,7 @@ export default class StaticTranslationsController {
     }
 
     return response.ok(
-      responseFormatter(HTTP.OK, 'success', 'Static translation found', {
-        ...staticTranslations.toJSON(),
-        transcripts: staticTranslationTranscript,
-      })
+      responseFormatter(HTTP.OK, 'success', 'Static translation found', staticTranslations)
     )
   }
 
