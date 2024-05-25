@@ -8,6 +8,7 @@ import {
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateFileName } from '#utils/generator'
 import { HTTP } from '#lib/constants/http'
+import StaticTranscript from '#models/static_transcript'
 
 export default class StaticTranslationsController {
   /**
@@ -77,6 +78,11 @@ export default class StaticTranslationsController {
       .select('id', 'title', 'videoUrl', 'createdAt', 'updatedAt')
       .first()
 
+    const staticTranslationTranscript = await StaticTranscript.query()
+      .where('static_translation_id', params.id)
+      .select('id', 'timestamp', 'text')
+      .orderBy('timestamp', 'asc')
+
     if (!staticTranslations) {
       return response.notFound(
         responseFormatter(HTTP.NOT_FOUND, 'error', 'Static translation not found')
@@ -84,7 +90,10 @@ export default class StaticTranslationsController {
     }
 
     return response.ok(
-      responseFormatter(HTTP.OK, 'success', 'Static translation found', staticTranslations)
+      responseFormatter(HTTP.OK, 'success', 'Static translation found', {
+        ...staticTranslations.toJSON(),
+        transcripts: staticTranslationTranscript,
+      })
     )
   }
 
