@@ -1,9 +1,13 @@
+import { customAlphabet, urlAlphabet } from 'nanoid'
+
+const nanoid = customAlphabet(urlAlphabet, 16)
+
 function generateAvatarName(name: string, extname: string) {
-  return `${new Date().getTime()}_${name}.${extname}`
+  return `${nanoid()}_${name}.${extname}`
 }
 
 function generateFileName(userId: number, extname: string) {
-  return `${new Date().getTime()}_${userId}.${extname}`
+  return `${nanoid()}_${userId}.${extname}`
 }
 
 export { generateAvatarName, generateFileName }
