@@ -8,7 +8,6 @@ import {
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateFileName } from '#utils/generator'
 import { HTTP } from '#lib/constants/http'
-import StaticTranscript from '#models/static_transcript'
 
 export default class StaticTranslationsController {
   /**
