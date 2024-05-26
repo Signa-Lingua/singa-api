@@ -19,7 +19,7 @@ const GithubAuthsController = () => import('#controllers/github_auths_controller
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
-
+const TranscriptStaticsController = () => import('#controllers/transcript_statics_controller')
 const StaticTranslationsController = () => import('#controllers/static_translations_controller')
 
 // Tests Routes
@@ -75,5 +75,9 @@ router
     router.get('/translation/static/:id', [StaticTranslationsController, 'show'])
     router.put('/translation/static/:id', [StaticTranslationsController, 'update'])
     router.delete('/translation/static/:id', [StaticTranslationsController, 'destroy'])
+
+    // Static Translation Transcript
+    router.get('/translation/static/:id/transcript', [TranscriptStaticsController, 'show'])
+    router.delete('/translation/static/:id/transcript', [TranscriptStaticsController, 'destroy'])
   })
   .middleware(middleware.auth())
