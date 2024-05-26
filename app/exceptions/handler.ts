@@ -3,6 +3,7 @@ import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors as coreError } from '@adonisjs/core'
 import { errors as authError } from '@adonisjs/auth'
 import { errors as dbError } from '@adonisjs/lucid'
+import { HTTP } from '#lib/constants/http'
 import responseFormatter from '#utils/response_formatter'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
