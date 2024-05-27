@@ -19,7 +19,10 @@ const GithubAuthsController = () => import('#controllers/github_auths_controller
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
-const TranscriptStaticsController = () => import('#controllers/transcript_statics_controller')
+const ConversationNodeVideosController = () =>
+  import('#controllers/conversation_node_videos_controller')
+const ConversationNodeSpeechesController = () =>
+  import('#controllers/conversation_node_speeches_controller')
 const StaticTranslationsController = () => import('#controllers/static_translations_controller')
 const ConversationTranslationsController = () =>
   import('#controllers/conversation_translations_controller')
@@ -83,13 +86,10 @@ router
     router.post('/translation/conversation', [ConversationTranslationsController, 'create'])
     // Conversation Translation Single
     router.get('/translation/conversation/:id', [ConversationTranslationsController, 'show'])
-    router.post('/translation/conversation/:id/video', [
-      ConversationTranslationsController,
-      'createNodeVideo',
-    ])
+    router.post('/translation/conversation/:id/video', [ConversationNodeVideosController, 'store'])
     router.post('/translation/conversation/:id/speech', [
-      ConversationTranslationsController,
-      'createNodeSpeech',
+      ConversationNodeSpeechesController,
+      'store',
     ])
     router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
     router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
