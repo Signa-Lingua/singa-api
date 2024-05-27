@@ -21,6 +21,8 @@ const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
 const TranscriptStaticsController = () => import('#controllers/transcript_statics_controller')
 const StaticTranslationsController = () => import('#controllers/static_translations_controller')
+const ConversationTranslationsController = () =>
+  import('#controllers/conversation_translations_controller')
 
 // Tests Routes
 router.get('/', ({ response }) => {
@@ -76,8 +78,20 @@ router
     router.put('/translation/static/:id', [StaticTranslationsController, 'update'])
     router.delete('/translation/static/:id', [StaticTranslationsController, 'destroy'])
 
-    // Static Translation Transcript
-    router.get('/translation/static/:id/transcript', [TranscriptStaticsController, 'show'])
-    router.delete('/translation/static/:id/transcript', [TranscriptStaticsController, 'destroy'])
+    // Conversation Translation Multiple
+    router.get('/translation/conversation', [ConversationTranslationsController, 'index'])
+    router.post('/translation/conversation', [ConversationTranslationsController, 'create'])
+    // Conversation Translation Single
+    router.get('/translation/conversation/:id', [ConversationTranslationsController, 'show'])
+    router.post('/translation/conversation/:id/video', [
+      ConversationTranslationsController,
+      'createNodeVideo',
+    ])
+    router.post('/translation/conversation/:id/speech', [
+      ConversationTranslationsController,
+      'createNodeSpeech',
+    ])
+    router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
+    router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
   })
   .middleware(middleware.auth())
