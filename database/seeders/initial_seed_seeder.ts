@@ -16,7 +16,7 @@ export default class extends BaseSeeder {
       {
         name: 'John Doe',
         email: 'johndoe@gmail.com',
-        password: 'asdasdasd',
+        password: 'test12345',
         providers: SocialProvider.PASSWORD,
         isSignUser: true,
       },
