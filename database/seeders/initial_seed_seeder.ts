@@ -50,16 +50,19 @@ export default class extends BaseSeeder {
       {
         userId: 1,
         title: 'First Static Translation for userid 1',
+        video: null,
         videoUrl: 'https://www.youtube.com/watch?v=123456',
       },
       {
         userId: 1,
         title: 'Second Static Translation for userid 1',
+        video: null,
         videoUrl: 'https://www.youtube.com/watch?v=123456',
       },
       {
         userId: 2,
         title: 'First Static Translation for userid 2',
+        video: null,
         videoUrl: 'https://www.youtube.com/watch?v=123456',
       },
     ]

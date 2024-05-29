@@ -104,4 +104,21 @@ export default class TestsController {
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'File deleted'))
   }
+
+  async testGoogleCloudStorageMetadata({ request, response }: HttpContext) {
+    // const { fileName } = await request.validateUsing(fileDeleteValidator)
+
+    const result = await googleCloudStorageService.getFileMedatata(
+      'static-translation',
+      'blahaj.mp4'
+    )
+
+    if (result.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', result.message, null)
+      )
+    }
+
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'File metadata', result.data))
+  }
 }

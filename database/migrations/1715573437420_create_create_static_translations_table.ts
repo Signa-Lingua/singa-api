@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id').primary().notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('title').notNullable()
+      table.string('video').nullable()
       table.string('video_url').notNullable()
 
       table.timestamp('created_at')

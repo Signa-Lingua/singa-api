@@ -70,6 +70,50 @@ class GoogleCloudStorageService {
     }
   }
 
+  async getFileMedatata(subPath: string, fileName: string) {
+    try {
+      const gcs = this.#gcloudStorage.bucket(this.#bucketName)
+      const file = gcs.file(this.generatePath(subPath, fileName))
+      const [metadata] = await file.getMetadata()
+
+      return {
+        error: false,
+        message: 'File metadata',
+        data: metadata,
+      }
+    } catch (error) {
+      return {
+        error: true,
+        message: error.message,
+      }
+    }
+  }
+
+  async getTotalSize(subPath: string, arrayOfFileName: string[]) {
+    let totalSize = 0
+
+    try {
+      for (const fileName of arrayOfFileName) {
+        const metadata = await this.getFileMedatata(subPath, fileName)
+        const fileSize = metadata.data!.size // in bytes
+
+        // TODO: Fix this
+        totalSize += Number.parseInt(fileSize as string)
+      }
+    } catch (error) {
+      return {
+        error: true,
+        message: error.message,
+      }
+    }
+
+    return {
+      error: false,
+      message: 'Total size',
+      data: totalSize,
+    }
+  }
+
   generatePath(subPath: string, fileName: string) {
     return `${this.#storagePath}/${subPath}/${fileName}`
   }
