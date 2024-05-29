@@ -33,6 +33,23 @@ export default class StaticTranslationsController {
 
     const { title, file } = await request.validateUsing(staticTranslationValidator)
 
+    const staticTranslations = await StaticTranslation.query()
+      .where('user_id', userId!)
+      .select('video')
+    const totalSize = await googleCloudStorageService.getTotalSize(
+      'static-translation',
+      staticTranslations.map((arr) => arr.video as string)
+    )
+
+    console.log(staticTranslations)
+    console.log(totalSize)
+
+    if (totalSize.data! > 1024 * 1024 * 2) {
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'User storage quota exceeded')
+      )
+    }
+
     // TODO: Request To Machine Learning Service
 
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
@@ -51,6 +68,7 @@ export default class StaticTranslationsController {
 
     const staticTranslation = await StaticTranslation.create({
       title,
+      video: generatedFileName,
       videoUrl: fileUrl.data,
       userId,
     })

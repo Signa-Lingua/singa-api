@@ -36,6 +36,7 @@ router.post('/test', [TestsController, 'testFileUpload'])
 router.delete('/test', [TestsController, 'testFileDelete'])
 router.post('/test/gcp', [TestsController, 'testGoogleCloudStorage'])
 router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete'])
+router.get('/test/gcp/metadata', [TestsController, 'testGoogleCloudStorageMetadata'])
 
 // Auth
 router.post('/login', [AuthController, 'create'])
