@@ -12,12 +12,18 @@ export default class GoogleCloudStorageProvider {
   constructor(protected app: ApplicationService) {}
 
   register() {
+    let credentials: string
+
+    try {
+      credentials = JSON.parse(env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE') as string)
+    } catch (error) {
+      credentials = env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE')
+    }
+
     this.app.container.singleton('GoogleCloudStorage', async () => {
       return new gcp.Storage({
         projectId: env.get('GOOGLE_CLOUD_STORAGE_PROJECT_ID'),
-        keyFilename:
-          env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE') ||
-          JSON.parse(env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS') as string),
+        keyFilename: credentials,
       })
     })
   }
