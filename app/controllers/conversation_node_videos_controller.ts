@@ -2,6 +2,7 @@ import { HTTP } from '#lib/constants/http'
 import ConversationNode from '#models/conversation_node'
 import ConversationTranslation from '#models/conversation_translation'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
+import env from '#start/env'
 import { generateFileName } from '#utils/generator'
 import responseFormatter from '#utils/response_formatter'
 import { conversationNodeVideoValidator } from '#validators/conversation_translation'
@@ -27,12 +28,26 @@ export default class ConversationNodeVideosController {
       )
     }
 
+    const usedQuota = await googleCloudStorageService.getUserUsedQuota('conversation', userId!)
+
+    if (usedQuota.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', usedQuota.message)
+      )
+    }
+
+    if (usedQuota.data > env.get('CONVERSATION_QUOTA')) {
+      return response.forbidden(
+        responseFormatter(HTTP.FORBIDDEN, 'error', 'User storage quota exceeded')
+      )
+    }
+
     // TODO: Request To Machine Learning Service
 
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
 
     const fileUrl = await googleCloudStorageService.save(
-      'conversation-translation',
+      env.get('CONVERSATION_STORAGE_PATH'),
       file.tmpPath!,
       generatedFileName
     )
@@ -46,6 +61,7 @@ export default class ConversationNodeVideosController {
     const conversationNode = await ConversationNode.create({
       conversationTranslationId: conversationTranslation.id,
       userId,
+      video: generatedFileName,
       videoUrl: fileUrl.data,
       type,
     })

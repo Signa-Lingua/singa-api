@@ -1,6 +1,9 @@
+import ConversationNode from '#models/conversation_node'
+import StaticTranslation from '#models/static_translation'
 import env from '#start/env'
 import { TGCPStorage, TGoogleFileServiceResult } from '#types/GoogleCloudStorageService'
 import app from '@adonisjs/core/services/app'
+import { FileMetadata } from '@google-cloud/storage'
 
 class GoogleCloudStorageService {
   #gcloudStorage: TGCPStorage = {} as TGCPStorage
@@ -70,7 +73,10 @@ class GoogleCloudStorageService {
     }
   }
 
-  async getFileMedatata(subPath: string, fileName: string) {
+  async getFileMedatata(
+    subPath: string,
+    fileName: string
+  ): Promise<TGoogleFileServiceResult<FileMetadata>> {
     try {
       const gcs = this.#gcloudStorage.bucket(this.#bucketName)
       const file = gcs.file(this.generatePath(subPath, fileName))
@@ -89,16 +95,33 @@ class GoogleCloudStorageService {
     }
   }
 
-  async getTotalSize(subPath: string, arrayOfFileName: string[]) {
+  async getTotalSize(
+    subPath: string,
+    arrayOfFileName: string[]
+  ): Promise<TGoogleFileServiceResult<number>> {
     let totalSize = 0
 
     try {
       for (const fileName of arrayOfFileName) {
         const metadata = await this.getFileMedatata(subPath, fileName)
-        const fileSize = metadata.data!.size // in bytes
 
-        // TODO: Fix this
-        totalSize += Number.parseInt(fileSize as string)
+        if (metadata.error) {
+          return metadata
+        }
+
+        // in bytes
+        const fileSize = metadata.data.size
+
+        if (typeof fileSize === 'string') {
+          totalSize += Number.parseInt(fileSize)
+        } else if (typeof fileSize === 'number') {
+          totalSize += fileSize
+        } else {
+          return {
+            error: true,
+            message: 'File size is not a number',
+          }
+        }
       }
     } catch (error) {
       return {
@@ -112,6 +135,24 @@ class GoogleCloudStorageService {
       message: 'Total size',
       data: totalSize,
     }
+  }
+
+  async getUserUsedQuota(
+    type: 'static' | 'conversation',
+    userId: number
+  ): Promise<TGoogleFileServiceResult<number>> {
+    const path =
+      type === 'static' ? env.get('STATIC_STORAGE_PATH') : env.get('CONVERSATION_STORAGE_PATH')
+    const model = type === 'static' ? StaticTranslation : ConversationNode
+
+    const ownedTranslation = await model.query().where('user_id', userId).select('video')
+
+    // filter out null values
+    const filtered = ownedTranslation.map((t) => t.video).filter((v) => v) as string[]
+
+    const totalSize = await this.getTotalSize(path, filtered)
+
+    return totalSize
   }
 
   generatePath(subPath: string, fileName: string) {
