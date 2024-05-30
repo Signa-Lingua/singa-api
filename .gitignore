@@ -8,6 +8,7 @@ tmp
 .env.local
 .env.production.local
 .env.development.local
+.env.yaml
 
 # Frontend assets compiled code
 public/assets
@@ -32,4 +33,4 @@ uploads
 syncRepo.bat
 
 # Cloud Storage Account Key
-cloud-storage-key.json
+*key.json

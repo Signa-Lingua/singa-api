@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
+    "build-ignore": "node ace build --ignore-ts-errors",
     "dev": "node ace serve --hmr",
     "test": "node ace test",
     "lint": "eslint .",
@@ -54,7 +55,6 @@
     "hot-hook": "^0.2.5",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "pino-pretty": "^11.0.0",
     "prettier": "3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
@@ -75,6 +75,7 @@
     "nanoid": "^5.0.7",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.2.2",
+    "pino-pretty": "^11.0.0",
     "tmp-promise": "^3.0.3"
   },
   "hotHook": {
