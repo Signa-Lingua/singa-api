@@ -10,17 +10,18 @@ import { generateAvatarName } from '#utils/generator'
 import { SocialProvider } from '#lib/constants/auth'
 import hash from '@adonisjs/core/services/hash'
 import { HTTP } from '#lib/constants/http'
+import env from '#start/env'
 
 export default class UsersController {
   /**
    * Display a list of resource
    */
   async index({ auth, response }: HttpContext) {
-    const user = auth.use('jwt').user?.id
+    const userId = auth.use('jwt').user?.id
 
     // return all execpt password
     const me = await User.query()
-      .where('id', user!)
+      .where('id', userId!)
       .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
       .first()
 
@@ -28,7 +29,38 @@ export default class UsersController {
       return response.notFound(responseFormatter(HTTP.NOT_FOUND, 'error', 'User not found'))
     }
 
-    return response.ok(responseFormatter(HTTP.OK, 'success', 'Get user success', me))
+    const staticQuota = await googleCloudStorageService.getUserUsedQuota('static', userId!)
+
+    if (staticQuota.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', staticQuota.message)
+      )
+    }
+
+    const conversationQuota = await googleCloudStorageService.getUserUsedQuota(
+      'conversation',
+      userId!
+    )
+
+    if (conversationQuota.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', conversationQuota.message)
+      )
+    }
+
+    return response.ok(
+      responseFormatter(HTTP.OK, 'success', 'Get user success', {
+        ...me.toJSON(),
+        static: {
+          used: staticQuota.data,
+          quota: env.get('STATIC_QUOTA'),
+        },
+        conversation: {
+          used: conversationQuota.data,
+          quota: env.get('CONVERSATION_QUOTA'),
+        },
+      })
+    )
   }
 
   /**
@@ -155,5 +187,9 @@ export default class UsersController {
       .first()
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'Update user success', newUser))
+  }
+
+  async quota({ auth, response }: HttpContext) {
+    const userId = auth.use('jwt').user?.id
   }
 }

@@ -8,6 +8,8 @@ import {
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateFileName } from '#utils/generator'
 import { HTTP } from '#lib/constants/http'
+import env from '#start/env'
+import { resizeVideo } from '#services/ffmpeg_service'
 
 export default class StaticTranslationsController {
   /**
@@ -33,20 +35,25 @@ export default class StaticTranslationsController {
 
     const { title, file } = await request.validateUsing(staticTranslationValidator)
 
-    const staticTranslations = await StaticTranslation.query()
-      .where('user_id', userId!)
-      .select('video')
-    const totalSize = await googleCloudStorageService.getTotalSize(
-      'static-translation',
-      staticTranslations.map((arr) => arr.video as string)
-    )
+    const usedQuota = await googleCloudStorageService.getUserUsedQuota('static', userId!)
 
-    console.log(staticTranslations)
-    console.log(totalSize)
+    if (usedQuota.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', usedQuota.message)
+      )
+    }
 
-    if (totalSize.data! > 1024 * 1024 * 2) {
-      return response.badRequest(
-        responseFormatter(HTTP.BAD_REQUEST, 'error', 'User storage quota exceeded')
+    if (usedQuota.data > env.get('STATIC_QUOTA')) {
+      return response.forbidden(
+        responseFormatter(HTTP.FORBIDDEN, 'error', 'User storage quota exceeded')
+      )
+    }
+
+    const resizeResult = await resizeVideo(file.tmpPath!)
+
+    if (resizeResult.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', resizeResult.message)
       )
     }
 
@@ -55,10 +62,12 @@ export default class StaticTranslationsController {
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
 
     const fileUrl = await googleCloudStorageService.save(
-      'static-translation',
-      file.tmpPath!,
+      env.get('STATIC_STORAGE_PATH'),
+      resizeResult.resizedVideoPath,
       generatedFileName
     )
+
+    resizeResult.cleanupFile()
 
     if (fileUrl.error) {
       return response.internalServerError(
@@ -150,6 +159,19 @@ export default class StaticTranslationsController {
       return response.notFound(
         responseFormatter(HTTP.BAD_REQUEST, 'error', 'Static translation not found')
       )
+    }
+
+    if (staticTranslation.video) {
+      const fileDelete = await googleCloudStorageService.delete(
+        env.get('STATIC_STORAGE_PATH'),
+        staticTranslation.video
+      )
+
+      if (fileDelete.error) {
+        return response.internalServerError(
+          responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', fileDelete.message)
+        )
+      }
     }
 
     await staticTranslation.delete()
