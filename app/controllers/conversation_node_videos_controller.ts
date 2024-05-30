@@ -1,6 +1,7 @@
 import { HTTP } from '#lib/constants/http'
 import ConversationNode from '#models/conversation_node'
 import ConversationTranslation from '#models/conversation_translation'
+import { resizeVideo } from '#services/ffmpeg_service'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
 import env from '#start/env'
 import { generateFileName } from '#utils/generator'
@@ -42,15 +43,25 @@ export default class ConversationNodeVideosController {
       )
     }
 
+    const resizeResult = await resizeVideo(file.tmpPath!)
+
+    if (resizeResult.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', resizeResult.message)
+      )
+    }
+
     // TODO: Request To Machine Learning Service
 
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
 
     const fileUrl = await googleCloudStorageService.save(
       env.get('CONVERSATION_STORAGE_PATH'),
-      file.tmpPath!,
+      resizeResult.resizedVideoPath,
       generatedFileName
     )
+
+    resizeResult.cleanupFile()
 
     if (fileUrl.error) {
       return response.internalServerError(

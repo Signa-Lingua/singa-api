@@ -9,6 +9,7 @@ import googleCloudStorageService from '#services/google_cloud_storage_service'
 import { generateFileName } from '#utils/generator'
 import { HTTP } from '#lib/constants/http'
 import env from '#start/env'
+import { resizeVideo } from '#services/ffmpeg_service'
 
 export default class StaticTranslationsController {
   /**
@@ -48,15 +49,25 @@ export default class StaticTranslationsController {
       )
     }
 
+    const resizeResult = await resizeVideo(file.tmpPath!)
+
+    if (resizeResult.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', resizeResult.message)
+      )
+    }
+
     // TODO: Request To Machine Learning Service
 
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
 
     const fileUrl = await googleCloudStorageService.save(
       env.get('STATIC_STORAGE_PATH'),
-      file.tmpPath!,
+      resizeResult.resizedVideoPath,
       generatedFileName
     )
+
+    resizeResult.cleanupFile()
 
     if (fileUrl.error) {
       return response.internalServerError(
