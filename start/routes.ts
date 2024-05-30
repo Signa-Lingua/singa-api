@@ -72,6 +72,7 @@ router
 
     // Users
     router.get('/users/me', [UsersController, 'index'])
+    router.get('/users/quota', [UsersController, 'quota'])
     router.put('/users/me', [UsersController, 'update'])
 
     // Static Translation Multiple
