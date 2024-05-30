@@ -15,7 +15,9 @@ export default class GoogleCloudStorageProvider {
     this.app.container.singleton('GoogleCloudStorage', async () => {
       return new gcp.Storage({
         projectId: env.get('GOOGLE_CLOUD_STORAGE_PROJECT_ID'),
-        keyFilename: env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE'),
+        keyFilename:
+          env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE') ||
+          JSON.parse(env.get('GOOGLE_CLOUD_STORAGE_CREDENTIALS') as string),
       })
     })
   }
