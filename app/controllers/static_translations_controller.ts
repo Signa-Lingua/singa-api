@@ -150,6 +150,19 @@ export default class StaticTranslationsController {
       )
     }
 
+    if (staticTranslation.video) {
+      const fileDelete = await googleCloudStorageService.delete(
+        env.get('STATIC_STORAGE_PATH'),
+        staticTranslation.video
+      )
+
+      if (fileDelete.error) {
+        return response.internalServerError(
+          responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', fileDelete.message)
+        )
+      }
+    }
+
     await staticTranslation.delete()
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'Delete static translation success'))

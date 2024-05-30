@@ -3,6 +3,7 @@ import responseFormatter from '#utils/response_formatter'
 import { conversationTranslationValidator } from '#validators/conversation_translation'
 import { HTTP } from '#lib/constants/http'
 import ConversationTranslation from '#models/conversation_translation'
+import googleCloudStorageService from '#services/google_cloud_storage_service'
 
 export default class ConversationTranslationsController {
   /**
@@ -123,11 +124,26 @@ export default class ConversationTranslationsController {
     const conversationTranslation = await ConversationTranslation.query()
       .where('user_id', userId!)
       .where('id', params.id)
+      .preload('conversationNodes')
       .first()
 
     if (!conversationTranslation) {
       return response.notFound(
         responseFormatter(HTTP.BAD_REQUEST, 'error', 'Conversation translation not found')
+      )
+    }
+
+    const filesToBeDeleted = conversationTranslation?.conversationNodes
+      .map((node) => node.video)
+      .filter(Boolean) as string[]
+
+    try {
+      for (const fileName of filesToBeDeleted) {
+        await googleCloudStorageService.delete('conversation-translation', fileName)
+      }
+    } catch (error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', error.message)
       )
     }
 
