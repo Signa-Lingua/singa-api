@@ -12,6 +12,9 @@ ARG NODE_VERSION=20.12.0
 # Use node image for base image for all stages.
 FROM node:${NODE_VERSION}-slim as base
 
+# Install FFmpeg
+RUN apt-get update --fix-missing && apt-get install ffmpeg -y
+
 # Set working directory for all build stages.
 WORKDIR /usr/src/app
 
@@ -63,9 +66,6 @@ COPY package.json .
 # the built application from the build stage into the image.
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/build ./
-
-# Listen this port
-# ENV APP_PORT 3333
 
 # Expose the port that the application listens on.
 EXPOSE 3333
