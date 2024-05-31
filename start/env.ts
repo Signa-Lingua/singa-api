@@ -49,9 +49,9 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   // FACEBOOK_CLIENT_ID: Env.schema.string(),
   // FACEBOOK_CLIENT_SECRET: Env.schema.string(),
-  // GITHUB_CLIENT_ID: Env.schema.string(),
-  // GITHUB_CLIENT_SECRET: Env.schema.string(),
-  // GITHUB_CLIENT_CALLBACK_URL: Env.schema.string(),
+  GITHUB_CLIENT_ID: Env.schema.string(),
+  GITHUB_CLIENT_SECRET: Env.schema.string(),
+  GITHUB_CLIENT_CALLBACK_URL: Env.schema.string(),
   GOOGLE_CLIENT_ID: Env.schema.string(),
   GOOGLE_CLIENT_SECRET: Env.schema.string(),
   GOOGLE_CLIENT_CALLBACK_URL: Env.schema.string(),

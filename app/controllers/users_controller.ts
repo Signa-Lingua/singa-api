@@ -69,7 +69,7 @@ export default class UsersController {
    */
   async create({ auth, response }: HttpContext) {
     const user = await User.create({
-      name: `Guest-${nanoid.nanoid(16)}`,
+      name: `Guest${nanoid.nanoid(16).replace(/[^a-zA-Z]/g, '')}`,
     })
 
     const token = await auth.use('jwt').generateWithRefreshToken(user)
