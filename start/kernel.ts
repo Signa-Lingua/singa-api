@@ -43,4 +43,5 @@ router.use([
  */
 export const middleware = router.named({
   auth: () => import('#middleware/auth_middleware'),
+  deleteOldTranslation: () => import('#middleware/delete_old_translation_middleware'),
 })

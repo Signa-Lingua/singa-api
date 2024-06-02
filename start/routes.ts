@@ -96,4 +96,4 @@ router
     router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
     router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
   })
-  .middleware(middleware.auth())
+  .middleware([middleware.auth(), middleware.deleteOldTranslation()])

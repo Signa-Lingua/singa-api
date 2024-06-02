@@ -46,7 +46,7 @@ export default class GithubAuthsController {
         name: ghUser.name,
         avatarUrl: ghUser.avatarUrl,
         email: ghUser.email,
-        providers: SocialProvider.GITHUB,
+        provider: SocialProvider.GITHUB,
       }
     )
 
