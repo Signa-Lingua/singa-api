@@ -7,9 +7,26 @@ import ConversationTranslation from '#models/conversation_translation'
 import ConversationNode from '#models/conversation_node'
 import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from '#models/conversation_transcript'
+import Article from '#models/article'
 
 export default class extends BaseSeeder {
   async run() {
+    // Insert articles
+    const articles = [
+      {
+        title: 'Article 1',
+        description: 'Description 1',
+        imageUrl: 'https://www.example.com/image1.jpg',
+      },
+      {
+        title: 'Article 2',
+        description: 'Description 2',
+        imageUrl: 'https://www.example.com/image2.jpg',
+      },
+    ]
+
+    await Article.createMany(articles)
+
     // Insert user
     await User.createMany([
       // registered user
