@@ -65,5 +65,4 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   GOOGLE_CLOUD_STORAGE_BUCKET_NAME: Env.schema.string(),
   GOOGLE_CLOUD_STORAGE_STORAGE_PATH: Env.schema.string(),
-  GOOGLE_CLOUD_STORAGE_CREDENTIALS_FILE: Env.schema.string(),
 })
