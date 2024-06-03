@@ -44,7 +44,7 @@ export default class GoogleAuthsController {
         name: googleUser.name,
         avatarUrl: googleUser.avatarUrl,
         email: googleUser.email,
-        providers: SocialProvider.GOOGLE,
+        provider: SocialProvider.GOOGLE,
       }
     )
 

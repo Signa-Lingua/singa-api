@@ -17,7 +17,7 @@ export default class extends BaseSeeder {
         name: 'John Doe',
         email: 'johndoe@gmail.com',
         password: 'test12345',
-        providers: SocialProvider.PASSWORD,
+        provider: SocialProvider.PASSWORD,
         isSignUser: true,
       },
       // registered social user
@@ -25,7 +25,7 @@ export default class extends BaseSeeder {
         name: 'Susan Doe',
         email: 'susandoe@gmail.com',
         password: null,
-        providers: SocialProvider.GOOGLE,
+        provider: SocialProvider.GOOGLE,
         isSignUser: false,
       },
       // guest user
@@ -33,7 +33,7 @@ export default class extends BaseSeeder {
         name: 'Mary Doe',
         email: null,
         password: null,
-        providers: null,
+        provider: null,
         isSignUser: true,
       },
       // second guest user
@@ -41,7 +41,7 @@ export default class extends BaseSeeder {
         name: 'Jane Doe',
         email: null,
         password: null,
-        providers: null,
+        provider: null,
         isSignUser: false,
       },
     ])

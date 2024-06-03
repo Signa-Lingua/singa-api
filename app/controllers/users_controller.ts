@@ -100,7 +100,7 @@ export default class UsersController {
       name,
       email,
       password,
-      providers: SocialProvider.PASSWORD,
+      provider: SocialProvider.PASSWORD,
     })
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'Register success'))
