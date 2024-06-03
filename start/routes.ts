@@ -19,6 +19,7 @@ const GithubAuthsController = () => import('#controllers/github_auths_controller
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const TestsController = () => import('#controllers/tests_controller')
+const ArticleController = () => import('#controllers/articles_controller')
 const ConversationNodeVideosController = () =>
   import('#controllers/conversation_node_videos_controller')
 const ConversationNodeSpeechesController = () =>
@@ -52,6 +53,8 @@ router.get('/login/github/callback', [GithubAuthsController, 'store'])
 // Google Auth
 router.get('/login/google', [GoogleAuthsController, 'index'])
 router.get('/login/google/callback', [GoogleAuthsController, 'store'])
+
+router.get('/articles', [ArticleController, 'index'])
 
 router
   .group(() => {
@@ -96,5 +99,10 @@ router
     ])
     router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
     router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
+
+    // Articles
+    router.post('/articles', [ArticleController, 'store'])
+    router.put('/articles/:id', [ArticleController, 'update'])
+    router.delete('/articles/:id', [ArticleController, 'destroy'])
   })
   .middleware([middleware.auth(), middleware.deleteOldTranslation()])

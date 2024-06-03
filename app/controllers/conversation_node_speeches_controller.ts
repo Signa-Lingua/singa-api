@@ -32,19 +32,19 @@ export default class ConversationNodeSpeechesController {
         userId,
         type,
       })
+
       const conversationNodeSpeechTranscript = await ConversationTranscript.create({
         userId,
         conversationNodeId: conversationNode.id,
         text,
         timestamp: '00:00:00.000',
       })
+
       const payload = {
         ...conversationNode.toJSON(),
         transcript: conversationNodeSpeechTranscript.toJSON(),
       }
 
-      // TODO: Add transcript to return response.
-      // Require previous TODO
       return response.created(
         responseFormatter(
           HTTP.CREATED,
