@@ -16,7 +16,7 @@ export const conversationNodeVideoValidator = vine.compile(
 
 export const conversationNodeSpeechValidator = vine.compile(
   vine.object({
-    file: vine.file({ size: '100mb', extnames: ['mp3'] }),
+    text: vine.string(),
     type: vine.literal(TranslationConversationNodeType.SPEECH),
   })
 )

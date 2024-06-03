@@ -26,6 +26,7 @@ const ConversationNodeSpeechesController = () =>
 const StaticTranslationsController = () => import('#controllers/static_translations_controller')
 const ConversationTranslationsController = () =>
   import('#controllers/conversation_translations_controller')
+const ConversationNodesController = () => import('#controllers/conversation_nodes_controller')
 
 // Tests Routes
 router.get('/', ({ response }) => {
@@ -87,7 +88,7 @@ router
     router.get('/translation/conversation', [ConversationTranslationsController, 'index'])
     router.post('/translation/conversation', [ConversationTranslationsController, 'create'])
     // Conversation Translation Single
-    router.get('/translation/conversation/:id', [ConversationTranslationsController, 'show'])
+    router.get('/translation/conversation/:id', [ConversationNodesController, 'show'])
     router.post('/translation/conversation/:id/video', [ConversationNodeVideosController, 'store'])
     router.post('/translation/conversation/:id/speech', [
       ConversationNodeSpeechesController,
@@ -96,4 +97,4 @@ router
     router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
     router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
   })
-  .middleware(middleware.auth())
+  .middleware([middleware.auth(), middleware.deleteOldTranslation()])

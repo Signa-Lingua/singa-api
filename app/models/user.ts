@@ -7,6 +7,7 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { SocialProvider } from '#lib/constants/auth'
 import StaticTranslation from './static_translation.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import ConversationTranslation from './conversation_translation.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -36,7 +37,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare isSignUser: boolean
 
   @column()
-  declare providers: SocialProvider | null
+  declare provider: SocialProvider | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -49,6 +50,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
     localKey: 'id',
   })
   declare staticTranslations: HasMany<typeof StaticTranslation>
+
+  @hasMany(() => ConversationTranslation, {
+    foreignKey: 'userId',
+    localKey: 'id',
+  })
+  declare conversationTranslations: HasMany<typeof ConversationTranslation>
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }
