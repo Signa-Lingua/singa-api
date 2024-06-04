@@ -2,6 +2,7 @@
 
 import { HTTP } from '#lib/constants/http'
 import Article from '#models/article'
+import fileService from '#services/file_service'
 import env from '#start/env'
 import responseFormatter from '#utils/response_formatter'
 import { articleUpdateValidator, articleValidator } from '#validators/article'
@@ -14,7 +15,7 @@ export default class ArticlesController {
     .map((admin) => Number.parseInt(admin))
 
   async index() {
-    const articles = await Article.query().orderBy('createdAt', 'desc')
+    const articles = await Article.query().orderBy('created_at', 'asc')
 
     return responseFormatter(HTTP.OK, 'success', 'Get list of articles', articles)
   }
@@ -26,7 +27,9 @@ export default class ArticlesController {
       return response.forbidden(responseFormatter(HTTP.FORBIDDEN, 'error', 'Forbidden'))
     }
 
-    const { title, description, imageUrl } = await request.validateUsing(articleValidator)
+    const { title, description, image } = await request.validateUsing(articleValidator)
+
+    const imageUrl = await fileService.save(image, 'article')
 
     try {
       // Create article
@@ -36,8 +39,10 @@ export default class ArticlesController {
         imageUrl,
       })
 
+      let mappedArticle = newArticle
+      mappedArticle.imageUrl = `${env.get('APP_URL')}/uploads/article/${newArticle.imageUrl}`
       return response.created(
-        responseFormatter(HTTP.CREATED, 'success', 'Create article success', newArticle.toJSON())
+        responseFormatter(HTTP.CREATED, 'success', 'Create article success', mappedArticle)
       )
     } catch (error) {
       return response.internalServerError(
@@ -55,7 +60,7 @@ export default class ArticlesController {
       return response.forbidden(responseFormatter(HTTP.FORBIDDEN, 'error', 'Forbidden'))
     }
 
-    const { title, description, imageUrl } = await request.validateUsing(articleUpdateValidator)
+    const { title, description, image } = await request.validateUsing(articleUpdateValidator)
 
     try {
       const targetedArticle = await Article.findBy('id', articleId)
@@ -64,15 +69,27 @@ export default class ArticlesController {
         return response.notFound(responseFormatter(HTTP.NOT_FOUND, 'error', 'Article not found'))
       }
 
+      if (await fileService.isFileExists(targetedArticle.imageUrl, 'article')) {
+        await fileService.delete(targetedArticle.imageUrl, 'article')
+      }
+
+      if (image) {
+        targetedArticle.imageUrl = await fileService.save(image, 'article')
+      }
+
       // Set new value or keep the old value if the new value is null or undefined
       targetedArticle.title = title || targetedArticle.title
       targetedArticle.description = description || targetedArticle.description
-      targetedArticle.imageUrl = imageUrl || targetedArticle.imageUrl
 
       await targetedArticle.save()
 
+      // rename targetedArticle.imageUrl to ${APP_URL}/${targetedArticle.imageUrl}
+
+      let mappedArticle = targetedArticle
+      mappedArticle.imageUrl = `${env.get('APP_URL')}/uploads/article/${targetedArticle.imageUrl}`
+
       return response.ok(
-        responseFormatter(HTTP.OK, 'success', 'Update article success', targetedArticle.toJSON())
+        responseFormatter(HTTP.OK, 'success', 'Update article success', mappedArticle)
       )
     } catch (error) {
       return response.internalServerError(

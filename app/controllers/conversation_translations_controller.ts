@@ -61,8 +61,8 @@ export default class ConversationTranslationsController {
       .select('id', 'title', 'createdAt', 'updatedAt')
       .preload('conversationNodes', (query) =>
         query
-          .orderBy('createdAt', 'desc')
-          .preload('transcripts', (q2) => q2.orderBy('createdAt', 'desc'))
+          .orderBy('createdAt', 'asc')
+          .preload('transcripts', (q2) => q2.orderBy('createdAt', 'asc'))
       )
       .first()
 

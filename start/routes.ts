@@ -71,6 +71,18 @@ router
       return response.download(absolutePath)
     })
 
+    router.get('/uploads/article/*', async ({ request, response }) => {
+      const filePath = request.param('*').join(sep)
+      const normalizedPath = normalize(filePath)
+
+      if (PATH_TRAVERSAL_REGEX.test(normalizedPath)) {
+        return response.badRequest('Malformed path')
+      }
+
+      const absolutePath = app.makePath('uploads/article', normalizedPath)
+      return response.download(absolutePath)
+    })
+
     // Auth
     router.post('/logout', [AuthController, 'destroy'])
 
