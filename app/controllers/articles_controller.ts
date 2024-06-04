@@ -3,10 +3,12 @@
 import { HTTP } from '#lib/constants/http'
 import Article from '#models/article'
 import fileService from '#services/file_service'
+import googleCloudStorageService from '#services/google_cloud_storage_service'
 import env from '#start/env'
 import responseFormatter from '#utils/response_formatter'
 import { articleUpdateValidator, articleValidator } from '#validators/article'
 import { HttpContext } from '@adonisjs/core/http'
+import * as nano from 'nanoid'
 
 export default class ArticlesController {
   private admins = env
@@ -29,20 +31,28 @@ export default class ArticlesController {
 
     const { title, description, image } = await request.validateUsing(articleValidator)
 
-    const imageUrl = await fileService.save(image, 'article')
+    const imageUrl = await googleCloudStorageService.save(
+      'article',
+      image.tmpPath!,
+      `article-${nano.nanoid(16)}.${image.extname}`
+    )
+
+    if (imageUrl.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', imageUrl.message)
+      )
+    }
 
     try {
       // Create article
       const newArticle = await Article.create({
         title,
         description,
-        imageUrl,
+        imageUrl: imageUrl.data,
       })
 
-      let mappedArticle = newArticle
-      mappedArticle.imageUrl = `${env.get('APP_URL')}/uploads/article/${newArticle.imageUrl}`
       return response.created(
-        responseFormatter(HTTP.CREATED, 'success', 'Create article success', mappedArticle)
+        responseFormatter(HTTP.CREATED, 'success', 'Create article success', newArticle)
       )
     } catch (error) {
       return response.internalServerError(
@@ -74,7 +84,32 @@ export default class ArticlesController {
       }
 
       if (image) {
-        targetedArticle.imageUrl = await fileService.save(image, 'article')
+        if (targetedArticle.imageUrl) {
+          const imageUrl = await googleCloudStorageService.delete(
+            'article',
+            targetedArticle.imageUrl
+          )
+
+          if (imageUrl.error) {
+            return response.internalServerError(
+              responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', imageUrl.message)
+            )
+          }
+        }
+
+        const imageUrl = await googleCloudStorageService.save(
+          'article',
+          image.tmpPath!,
+          `article-${nano.nanoid(16)}.${image.extname}`
+        )
+
+        if (imageUrl.error) {
+          return response.internalServerError(
+            responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', imageUrl.message)
+          )
+        }
+
+        targetedArticle.imageUrl = imageUrl.data
       }
 
       // Set new value or keep the old value if the new value is null or undefined
@@ -85,11 +120,8 @@ export default class ArticlesController {
 
       // rename targetedArticle.imageUrl to ${APP_URL}/${targetedArticle.imageUrl}
 
-      let mappedArticle = targetedArticle
-      mappedArticle.imageUrl = `${env.get('APP_URL')}/uploads/article/${targetedArticle.imageUrl}`
-
       return response.ok(
-        responseFormatter(HTTP.OK, 'success', 'Update article success', mappedArticle)
+        responseFormatter(HTTP.OK, 'success', 'Update article success', targetedArticle)
       )
     } catch (error) {
       return response.internalServerError(
@@ -112,6 +144,16 @@ export default class ArticlesController {
 
       if (!targetedArticle) {
         return response.notFound(responseFormatter(HTTP.NOT_FOUND, 'error', 'Article not found'))
+      }
+
+      if (targetedArticle.imageUrl) {
+        const imageUrl = await googleCloudStorageService.delete('article', targetedArticle.imageUrl)
+
+        if (imageUrl.error) {
+          return response.internalServerError(
+            responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', imageUrl.message)
+          )
+        }
       }
 
       await targetedArticle.delete()
