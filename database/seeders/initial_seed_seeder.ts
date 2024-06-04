@@ -29,6 +29,13 @@ export default class extends BaseSeeder {
 
     // Insert user
     await User.createMany([
+      {
+        name: 'Admin',
+        email: 'admin@admin.com',
+        password: 'admin12345',
+        provider: SocialProvider.PASSWORD,
+        isSignUser: true,
+      },
       // registered user
       {
         name: 'John Doe',

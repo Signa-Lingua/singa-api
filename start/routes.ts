@@ -56,6 +56,18 @@ router.get('/login/google/callback', [GoogleAuthsController, 'store'])
 
 router.get('/articles', [ArticleController, 'index'])
 
+router.get('/uploads/article/*', async ({ request, response }) => {
+  const filePath = request.param('*').join(sep)
+  const normalizedPath = normalize(filePath)
+
+  if (PATH_TRAVERSAL_REGEX.test(normalizedPath)) {
+    return response.badRequest('Malformed path')
+  }
+
+  const absolutePath = app.makePath('uploads/article', normalizedPath)
+  return response.download(absolutePath)
+})
+
 router
   .group(() => {
     // For Fetching Avatar
