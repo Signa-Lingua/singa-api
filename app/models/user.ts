@@ -1,13 +1,14 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { SocialProvider } from '#lib/constants/auth'
 import StaticTranslation from './static_translation.js'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import ConversationTranslation from './conversation_translation.js'
+import Role from './role.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -39,6 +40,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare provider: SocialProvider | null
 
+  @column()
+  declare roleId: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -56,6 +60,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
     localKey: 'id',
   })
   declare conversationTranslations: HasMany<typeof ConversationTranslation>
+
+  @hasOne(() => Role, {
+    foreignKey: 'id',
+    localKey: 'roleId',
+  })
+  declare role: HasOne<typeof Role>
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }

@@ -14,6 +14,7 @@ export default class extends BaseSchema {
       table.string('avatar_url').nullable()
       table.boolean('is_sign_user').defaultTo(false)
       table.enum('provider', Object.values(SocialProvider)).nullable()
+      table.integer('role_id').nullable()
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

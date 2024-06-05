@@ -7,25 +7,14 @@ import ConversationTranslation from '#models/conversation_translation'
 import ConversationNode from '#models/conversation_node'
 import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from '#models/conversation_transcript'
-import Article from '#models/article'
+import Role from '#models/role'
 
 export default class extends BaseSeeder {
   async run() {
     // Insert articles
-    const articles = [
-      {
-        title: 'Article 1',
-        description: 'Description 1',
-        imageUrl: 'https://www.example.com/image1.jpg',
-      },
-      {
-        title: 'Article 2',
-        description: 'Description 2',
-        imageUrl: 'https://www.example.com/image2.jpg',
-      },
-    ]
 
-    await Article.createMany(articles)
+    const adminRole = await Role.findByOrFail('name', 'admin')
+    const defaultRole = await Role.findByOrFail('name', 'user')
 
     // Insert user
     await User.createMany([
@@ -35,6 +24,7 @@ export default class extends BaseSeeder {
         password: 'admin12345',
         provider: SocialProvider.PASSWORD,
         isSignUser: true,
+        roleId: adminRole.id,
       },
       // registered user
       {
@@ -43,6 +33,7 @@ export default class extends BaseSeeder {
         password: 'test12345',
         provider: SocialProvider.PASSWORD,
         isSignUser: true,
+        roleId: defaultRole.id,
       },
       // registered social user
       {
@@ -51,6 +42,7 @@ export default class extends BaseSeeder {
         password: null,
         provider: SocialProvider.GOOGLE,
         isSignUser: false,
+        roleId: defaultRole.id,
       },
       // guest user
       {
@@ -59,6 +51,7 @@ export default class extends BaseSeeder {
         password: null,
         provider: null,
         isSignUser: true,
+        roleId: defaultRole.id,
       },
       // second guest user
       {
@@ -67,6 +60,7 @@ export default class extends BaseSeeder {
         password: null,
         provider: null,
         isSignUser: false,
+        roleId: defaultRole.id,
       },
     ])
 

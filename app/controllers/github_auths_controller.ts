@@ -4,6 +4,7 @@ import { SocialProvider } from '#lib/constants/auth'
 import responseFormatter from '#utils/response_formatter'
 import Authentication from '#models/authentication'
 import { HTTP } from '#lib/constants/http'
+import Role from '#models/role'
 
 export default class GithubAuthsController {
   /**
@@ -36,6 +37,14 @@ export default class GithubAuthsController {
       )
     }
 
+    const defaultRole = await Role.query().where('name', 'user').first()
+
+    if (!defaultRole) {
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Role not found or not created yet')
+      )
+    }
+
     const ghUser = await gh.user()
 
     const user = await User.firstOrCreate(
@@ -47,6 +56,7 @@ export default class GithubAuthsController {
         avatarUrl: ghUser.avatarUrl,
         email: ghUser.email,
         provider: SocialProvider.GITHUB,
+        roleId: defaultRole.id,
       }
     )
 
