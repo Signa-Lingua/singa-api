@@ -2,30 +2,30 @@
 
 import { HTTP } from '#lib/constants/http'
 import Article from '#models/article'
+import ArticlePolicy from '#policies/article_policy'
 import fileService from '#services/file_service'
 import googleCloudStorageService from '#services/google_cloud_storage_service'
-import env from '#start/env'
 import responseFormatter from '#utils/response_formatter'
 import { articleUpdateValidator, articleValidator } from '#validators/article'
 import { HttpContext } from '@adonisjs/core/http'
 import * as nano from 'nanoid'
 
 export default class ArticlesController {
-  private admins = env
-    .get('ADMINS')
-    .split(',')
-    .map((admin) => Number.parseInt(admin))
-
   async index() {
-    const articles = await Article.query().orderBy('created_at', 'asc')
+    const articles = await Article.query()
+      .orderBy('created_at', 'asc')
+      .preload('user', (query) => {
+        query.select('id', 'name', 'email', 'roleId')
+        query.preload('role')
+      })
 
     return responseFormatter(HTTP.OK, 'success', 'Get list of articles', articles)
   }
 
-  async store({ auth, request, response }: HttpContext) {
+  async store({ auth, bouncer, request, response }: HttpContext) {
     const userId = auth.use('jwt').user?.id
 
-    if (!this.admins.includes(userId!)) {
+    if (await bouncer.with(ArticlePolicy).denies('create')) {
       return response.forbidden(responseFormatter(HTTP.FORBIDDEN, 'error', 'Forbidden'))
     }
 
@@ -49,6 +49,7 @@ export default class ArticlesController {
         title,
         description,
         imageUrl: imageUrl.data,
+        createdBy: userId,
       })
 
       return response.created(
@@ -61,14 +62,12 @@ export default class ArticlesController {
     }
   }
 
-  async update({ auth, params, request, response }: HttpContext) {
-    const userId = auth.use('jwt').user?.id
-
-    const articleId = params.id
-
-    if (!this.admins.includes(userId!)) {
+  async update({ bouncer, params, request, response }: HttpContext) {
+    if (await bouncer.with(ArticlePolicy).denies('update')) {
       return response.forbidden(responseFormatter(HTTP.FORBIDDEN, 'error', 'Forbidden'))
     }
+
+    const articleId = params.id
 
     const { title, description, image } = await request.validateUsing(articleUpdateValidator)
 
@@ -118,6 +117,11 @@ export default class ArticlesController {
 
       await targetedArticle.save()
 
+      await targetedArticle.load('user', (query) => {
+        query.select('id', 'name', 'email', 'roleId')
+        query.preload('role')
+      })
+
       // rename targetedArticle.imageUrl to ${APP_URL}/${targetedArticle.imageUrl}
 
       return response.ok(
@@ -130,14 +134,12 @@ export default class ArticlesController {
     }
   }
 
-  async destroy({ auth, params, response }: HttpContext) {
-    const userId = auth.use('jwt').user?.id
-
-    const articleId = params.id
-
-    if (!this.admins.includes(userId!)) {
+  async destroy({ bouncer, params, response }: HttpContext) {
+    if (await bouncer.with(ArticlePolicy).denies('delete')) {
       return response.forbidden(responseFormatter(HTTP.FORBIDDEN, 'error', 'Forbidden'))
     }
+
+    const articleId = params.id
 
     try {
       const targetedArticle = await Article.findBy('id', articleId)

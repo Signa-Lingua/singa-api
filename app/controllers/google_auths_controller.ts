@@ -4,6 +4,7 @@ import User from '#models/user'
 import Authentication from '#models/authentication'
 import { SocialProvider } from '#lib/constants/auth'
 import { HTTP } from '#lib/constants/http'
+import Role from '#models/role'
 
 export default class GoogleAuthsController {
   /**
@@ -34,6 +35,14 @@ export default class GoogleAuthsController {
       )
     }
 
+    const defaultRole = await Role.query().where('name', 'user').first()
+
+    if (!defaultRole) {
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Role not found or not created yet')
+      )
+    }
+
     const googleUser = await google.user()
 
     const user = await User.firstOrCreate(
@@ -45,6 +54,7 @@ export default class GoogleAuthsController {
         avatarUrl: googleUser.avatarUrl,
         email: googleUser.email,
         provider: SocialProvider.GOOGLE,
+        roleId: defaultRole.id,
       }
     )
 

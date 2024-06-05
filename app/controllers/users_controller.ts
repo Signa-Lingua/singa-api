@@ -11,6 +11,7 @@ import { SocialProvider } from '#lib/constants/auth'
 import hash from '@adonisjs/core/services/hash'
 import { HTTP } from '#lib/constants/http'
 import env from '#start/env'
+import Role from '#models/role'
 
 export default class UsersController {
   /**
@@ -68,8 +69,17 @@ export default class UsersController {
    * this will handle guest user registration
    */
   async create({ auth, response }: HttpContext) {
+    const defaultRole = await Role.query().where('name', 'user').first()
+
+    if (!defaultRole) {
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Role not found or not created yet')
+      )
+    }
+
     const user = await User.create({
       name: `Guest${nanoid.nanoid(16).replace(/[^a-zA-Z]/g, '')}`,
+      roleId: defaultRole.id,
     })
 
     const token = await auth.use('jwt').generateWithRefreshToken(user)
@@ -96,11 +106,20 @@ export default class UsersController {
   async store({ request, response }: HttpContext) {
     const { name, email, password } = await request.validateUsing(registerValidator)
 
+    const defaultRole = await Role.query().where('name', 'user').first()
+
+    if (!defaultRole) {
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Role not found or not created yet')
+      )
+    }
+
     await User.create({
       name,
       email,
       password,
       provider: SocialProvider.PASSWORD,
+      roleId: defaultRole.id,
     })
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'Register success'))
