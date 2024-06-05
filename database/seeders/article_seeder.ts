@@ -16,7 +16,7 @@ export default class extends BaseSeeder {
         articles.push({
           title: 'Article ' + i,
           description: 'Description ' + i,
-          imageUrl: 'https://www.example.com/image' + i + '.jpg',
+          imageUrl: 'https://picsum.photos/200/300',
           createdBy: usersWithAdminRole.id,
         })
       }
