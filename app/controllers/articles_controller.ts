@@ -149,7 +149,9 @@ export default class ArticlesController {
       }
 
       if (targetedArticle.imageUrl) {
-        const imageUrl = await googleCloudStorageService.delete('article', targetedArticle.imageUrl)
+        const fileName = targetedArticle.imageUrl.split('/').pop()
+
+        const imageUrl = await googleCloudStorageService.delete('article', fileName!)
 
         if (imageUrl.error) {
           return response.internalServerError(
