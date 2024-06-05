@@ -68,8 +68,6 @@
     "@adonisjs/lucid": "^20.6.0",
     "@google-cloud/storage": "^7.11.0",
     "@rlanz/bull-queue": "^3.0.0",
-    "@techstark/opencv-js": "^4.9.0-release.3",
-    "@tensorflow/tfjs-node": "^4.19.0",
     "@vinejs/vine": "^2.0.0",
     "axios": "^1.7.2",
     "fluent-ffmpeg": "^2.1.2",
