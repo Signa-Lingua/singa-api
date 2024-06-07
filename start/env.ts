@@ -66,4 +66,11 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   GOOGLE_CLOUD_STORAGE_BUCKET_NAME: Env.schema.string(),
   GOOGLE_CLOUD_STORAGE_STORAGE_PATH: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring predict api
+  |----------------------------------------------------------
+  */
+  PREDICT_API_HOST: Env.schema.string({ format: 'host' }),
 })
