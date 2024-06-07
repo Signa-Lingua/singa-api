@@ -9,6 +9,9 @@ import vine from '@vinejs/vine'
 import { nanoid } from 'nanoid'
 import ffmpegService from '#services/ffmpeg_service'
 import { HTTP } from '#lib/constants/http'
+import TestqueueJob from '../jobs/testqueue_job.js'
+import queue from '@rlanz/bull-queue/services/main'
+import TestQueue from '#models/test_queue'
 
 export default class TestsController {
   async test({ request, response }: HttpContext) {
@@ -120,5 +123,18 @@ export default class TestsController {
     }
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'File metadata', result.data))
+  }
+
+  async testQueueSystem({ response }: HttpContext) {
+    const request = new TestqueueJob()
+
+    const testQueue = await TestQueue.create({
+      name: 'test',
+      status: 'pending',
+    })
+
+    request.handle({ requestId: testQueue.id })
+
+    return response.ok(responseFormatter(HTTP.OK, 'success', 'Queue system working'))
   }
 }
