@@ -3,7 +3,7 @@ import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 export const articleValidator = vine.compile(
   vine.object({
     title: vine.string().minLength(3).maxLength(254),
-    description: vine.string().minLength(3).maxLength(254),
+    description: vine.string().minLength(3),
     image: vine.file({ size: '2mb', extnames: ['jpg', 'png'] }),
   })
 )
@@ -11,7 +11,7 @@ export const articleValidator = vine.compile(
 export const articleUpdateValidator = vine.compile(
   vine.object({
     title: vine.string().minLength(3).maxLength(254).optional(),
-    description: vine.string().minLength(3).maxLength(254).optional(),
+    description: vine.string().minLength(3).optional(),
     image: vine.file({ size: '2mb', extnames: ['jpg', 'png'] }).optional(),
   })
 )
