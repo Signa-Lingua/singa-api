@@ -14,6 +14,7 @@ export default defineConfig({
     () => import('@adonisjs/core/commands'),
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/bouncer/commands'),
+    () => import('@rlanz/bull-queue/commands')
   ],
 
   /*
@@ -39,6 +40,7 @@ export default defineConfig({
     () => import('@adonisjs/ally/ally_provider'),
     () => import('./app/providers/google_cloud_service_provider.js'),
     () => import('@adonisjs/bouncer/bouncer_provider'),
+    () => import('@rlanz/bull-queue/queue_provider')
   ],
 
   /*

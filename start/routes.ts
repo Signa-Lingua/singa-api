@@ -39,6 +39,7 @@ router.delete('/test', [TestsController, 'testFileDelete'])
 router.post('/test/gcp', [TestsController, 'testGoogleCloudStorage'])
 router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete'])
 router.get('/test/gcp/metadata', [TestsController, 'testGoogleCloudStorageMetadata'])
+router.get('/test/queue', [TestsController, 'testQueueSystem'])
 
 // Auth
 router.post('/login', [AuthController, 'create'])
@@ -54,7 +55,9 @@ router.get('/login/github/callback', [GithubAuthsController, 'store'])
 router.get('/login/google', [GoogleAuthsController, 'index'])
 router.get('/login/google/callback', [GoogleAuthsController, 'store'])
 
+// Public Articles
 router.get('/articles', [ArticleController, 'index'])
+router.get('/articles/:id', [ArticleController, 'show'])
 
 router.get('/uploads/article/*', async ({ request, response }) => {
   const filePath = request.param('*').join(sep)

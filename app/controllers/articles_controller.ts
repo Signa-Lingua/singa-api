@@ -22,6 +22,24 @@ export default class ArticlesController {
     return responseFormatter(HTTP.OK, 'success', 'Get list of articles', articles)
   }
 
+  async show({ params, response }: HttpContext) {
+    const targetedArticle = await Article.query()
+      .where('id', params.id)
+      .preload('user', (query) => {
+        query.select('id', 'name', 'email', 'roleId', 'avatarUrl')
+        query.preload('role')
+      })
+      .first()
+
+    if (!targetedArticle) {
+      return response.notFound(responseFormatter(HTTP.NOT_FOUND, 'error', 'Article not found'))
+    }
+
+    return response.ok(
+      responseFormatter(HTTP.OK, 'success', 'Get article success', targetedArticle)
+    )
+  }
+
   async store({ auth, bouncer, request, response }: HttpContext) {
     const userId = auth.use('jwt').user?.id
 

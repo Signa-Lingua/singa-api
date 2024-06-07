@@ -14,6 +14,18 @@ export default class ArticlePolicy extends BasePolicy {
     return isAllowed
   }
 
+  async show(user: User): Promise<boolean> {
+    let isAllowed = false
+
+    await user.load('role')
+
+    if (user.role.name === 'admin') {
+      isAllowed = true
+    }
+
+    return isAllowed
+  }
+
   async update(user: User): Promise<boolean> {
     let isAllowed = false
 
