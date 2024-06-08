@@ -117,6 +117,18 @@ router
     router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
     router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
 
+    // Conversation Nodes Video
+    router.get('/translation/conversation/:conversationTranslationId/video/:transcriptId', [
+      ConversationNodeVideosController,
+      'show',
+    ])
+
+    // Conversation Nodes Speech
+    router.post('/translation/conversation/node/speech', [
+      ConversationNodeSpeechesController,
+      'store',
+    ])
+
     // Bulk Delete Conversation Nodes
     router.post('/translation/conversation/bulk/node', [
       BulkDeleteConversationNodesController,

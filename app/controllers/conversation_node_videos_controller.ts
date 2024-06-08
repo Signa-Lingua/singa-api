@@ -14,6 +14,36 @@ import { convertMultipartFileToFile } from '#utils/converter'
 
 export default class ConversationNodeVideosController {
   /**
+   * Show individual record
+   */
+  async show({ auth, params, response }: HttpContext) {
+    const userId = auth.use('jwt').user?.id
+
+    const conversationTranslation = await ConversationNode.query()
+      .where('user_id', userId!)
+      .where('id', params.transcriptId)
+      .where('conversation_translation_id', params.conversationTranslationId)
+      .preload('transcripts', (query) => {
+        query.orderBy('created_at', 'asc')
+      })
+      .first()
+
+    if (!conversationTranslation) {
+      return response.notFound(
+        responseFormatter(HTTP.NOT_FOUND, 'error', 'Conversation translation not found')
+      )
+    }
+
+    return response.ok(
+      responseFormatter(
+        HTTP.OK,
+        'success',
+        'Get conversation translation success',
+        conversationTranslation
+      )
+    )
+  }
+  /**
    * Handle form submission for the create action
    */
   async store({ auth, params, request, response }: HttpContext) {
