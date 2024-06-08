@@ -18,6 +18,7 @@ export default class ConversationNodesController {
       .preload('transcripts', (query) => {
         query.orderBy('created_at', 'asc')
       })
+      .orderBy('created_at', 'asc')
 
     let mappedConversationNode = conversationNode.map((node) => {
       return {
