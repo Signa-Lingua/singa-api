@@ -81,5 +81,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring predict api
   |----------------------------------------------------------
   */
-  PREDICT_API_HOST: Env.schema.string({ format: 'host' }),
+  PREDICT_API_HOST: Env.schema.string(),
 })

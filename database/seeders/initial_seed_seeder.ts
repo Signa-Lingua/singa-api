@@ -8,6 +8,7 @@ import ConversationNode from '#models/conversation_node'
 import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from '#models/conversation_transcript'
 import Role from '#models/role'
+import { Status } from '#lib/constants/status'
 
 export default class extends BaseSeeder {
   async run() {
@@ -141,6 +142,7 @@ export default class extends BaseSeeder {
       },
       {
         type: TranslationConversationNodeType.SPEECH,
+        status: Status.SUCCESS,
       },
       {
         videoUrl: 'https://www.youtube.com/watch?v=123456',
@@ -148,6 +150,7 @@ export default class extends BaseSeeder {
       },
       {
         type: TranslationConversationNodeType.SPEECH,
+        status: Status.SUCCESS,
       },
     ]
 

@@ -1,4 +1,5 @@
 import { HTTP } from '#lib/constants/http'
+import { Status } from '#lib/constants/status'
 import ConversationNode from '#models/conversation_node'
 import ConversationTranscript from '#models/conversation_transcript'
 import ConversationTranslation from '#models/conversation_translation'
@@ -28,6 +29,7 @@ export default class ConversationNodeSpeechesController {
 
     try {
       const conversationNode = await ConversationNode.create({
+        status: Status.SUCCESS,
         conversationTranslationId: conversationTranslation.id,
         userId,
         type,

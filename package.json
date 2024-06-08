@@ -71,6 +71,7 @@
     "@techstark/opencv-js": "^4.9.0-release.3",
     "@tensorflow/tfjs-node": "^4.19.0",
     "@vinejs/vine": "^2.0.0",
+    "axios": "^1.7.2",
     "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
