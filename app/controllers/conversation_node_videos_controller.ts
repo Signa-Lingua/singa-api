@@ -48,6 +48,7 @@ export default class ConversationNodeVideosController {
    */
   async store({ auth, params, request, response }: HttpContext) {
     const userId = auth.use('jwt').user?.id
+    const isGuest = auth.use('jwt').user?.provider === null
 
     const { file, type } = await request.validateUsing(conversationNodeVideoValidator)
 
@@ -62,7 +63,7 @@ export default class ConversationNodeVideosController {
       )
     }
 
-    const usedQuota = await googleCloudStorageService.getUserUsedQuota('conversation', userId!)
+    const usedQuota = await googleCloudStorageService.getUserUsedQuota(userId!)
 
     if (usedQuota.error) {
       return response.internalServerError(
@@ -70,7 +71,10 @@ export default class ConversationNodeVideosController {
       )
     }
 
-    if (usedQuota.data > env.get('CONVERSATION_QUOTA')) {
+    if (
+      (usedQuota.data > env.get('GUEST_QUOTA') && isGuest) ||
+      (usedQuota.data > env.get('USER_QUOTA') && !isGuest)
+    ) {
       return response.forbidden(
         responseFormatter(HTTP.FORBIDDEN, 'error', 'User storage quota exceeded')
       )

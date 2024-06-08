@@ -28,9 +28,9 @@ export default await Env.create(new URL('../', import.meta.url), {
   DRIVE_NAME: Env.schema.string(),
   DRIVE_ROOT: Env.schema.string(),
   STATIC_STORAGE_PATH: Env.schema.string(),
-  STATIC_QUOTA: Env.schema.number(),
   CONVERSATION_STORAGE_PATH: Env.schema.string(),
-  CONVERSATION_QUOTA: Env.schema.number(),
+  GUEST_QUOTA: Env.schema.number(),
+  USER_QUOTA: Env.schema.number(),
 
   /*
   |----------------------------------------------------------

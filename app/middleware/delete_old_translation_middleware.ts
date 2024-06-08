@@ -14,7 +14,10 @@ export default class DeleteOldTranslationMiddleware {
     // Older than 7 days
     const olderThan = DateTime.now().minus({ days: 7 }).toSQL()
 
+    // Get all guests
     const guests = await User.query().whereNull('provider')
+
+    // Get all old translations
     const oldStaticTranslations = await StaticTranslation.query()
       .where('createdAt', '<', olderThan)
       .whereIn(
