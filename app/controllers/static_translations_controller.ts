@@ -32,10 +32,11 @@ export default class StaticTranslationsController {
    */
   async store({ auth, response, request }: HttpContext) {
     const userId = auth.use('jwt').user?.id
+    const isGuest = auth.use('jwt').user?.provider === null
 
     const { title, file } = await request.validateUsing(staticTranslationValidator)
 
-    const usedQuota = await googleCloudStorageService.getUserUsedQuota('static', userId!)
+    const usedQuota = await googleCloudStorageService.getUserUsedQuota(userId!)
 
     if (usedQuota.error) {
       return response.internalServerError(
@@ -43,7 +44,10 @@ export default class StaticTranslationsController {
       )
     }
 
-    if (usedQuota.data > env.get('STATIC_QUOTA')) {
+    if (
+      (usedQuota.data > env.get('GUEST_QUOTA') && isGuest) ||
+      (usedQuota.data > env.get('USER_QUOTA') && !isGuest)
+    ) {
       return response.forbidden(
         responseFormatter(HTTP.FORBIDDEN, 'error', 'User storage quota exceeded')
       )

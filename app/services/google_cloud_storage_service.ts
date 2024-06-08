@@ -137,22 +137,40 @@ class GoogleCloudStorageService {
     }
   }
 
-  async getUserUsedQuota(
-    type: 'static' | 'conversation',
-    userId: number
-  ): Promise<TGoogleFileServiceResult<number>> {
-    const path =
-      type === 'static' ? env.get('STATIC_STORAGE_PATH') : env.get('CONVERSATION_STORAGE_PATH')
-    const model = type === 'static' ? StaticTranslation : ConversationNode
+  async getUserUsedQuota(userId: number): Promise<TGoogleFileServiceResult<number>> {
+    const ownedStaticTranslation = await StaticTranslation.query()
+      .where('user_id', userId)
+      .whereNotNull('video')
+      .select('video')
 
-    const ownedTranslation = await model.query().where('user_id', userId).select('video')
+    const ownedConversationNode = await ConversationNode.query()
+      .where('user_id', userId)
+      .whereNotNull('video')
+      .select('video')
 
-    // filter out null values
-    const filtered = ownedTranslation.map((t) => t.video).filter((v) => v) as string[]
+    const ownedStaticTotalSize = await this.getTotalSize(
+      env.get('STATIC_STORAGE_PATH'),
+      ownedStaticTranslation.map((translation) => translation.video) as string[]
+    )
 
-    const totalSize = await this.getTotalSize(path, filtered)
+    if (ownedStaticTotalSize.error) {
+      return ownedStaticTotalSize
+    }
 
-    return totalSize
+    const ownedConversationTotalSize = await this.getTotalSize(
+      env.get('CONVERSATION_STORAGE_PATH'),
+      ownedConversationNode.map((node) => node.video) as string[]
+    )
+
+    if (ownedConversationTotalSize.error) {
+      return ownedConversationTotalSize
+    }
+
+    return {
+      error: false,
+      message: 'User used quota',
+      data: ownedStaticTotalSize.data + ownedConversationTotalSize.data,
+    }
   }
 
   generatePath(subPath: string, fileName: string) {

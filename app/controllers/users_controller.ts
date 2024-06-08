@@ -19,6 +19,7 @@ export default class UsersController {
    */
   async index({ auth, response }: HttpContext) {
     const userId = auth.use('jwt').user?.id
+    const isGuest = auth.use('jwt').user?.provider === null
 
     // return all execpt password
     const me = await User.query()
@@ -31,35 +32,20 @@ export default class UsersController {
       return response.notFound(responseFormatter(HTTP.NOT_FOUND, 'error', 'User not found'))
     }
 
-    const staticQuota = await googleCloudStorageService.getUserUsedQuota('static', userId!)
+    const usedQuota = await googleCloudStorageService.getUserUsedQuota(userId!)
 
-    if (staticQuota.error) {
+    if (usedQuota.error) {
       return response.internalServerError(
-        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', staticQuota.message)
-      )
-    }
-
-    const conversationQuota = await googleCloudStorageService.getUserUsedQuota(
-      'conversation',
-      userId!
-    )
-
-    if (conversationQuota.error) {
-      return response.internalServerError(
-        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', conversationQuota.message)
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', usedQuota.message)
       )
     }
 
     return response.ok(
       responseFormatter(HTTP.OK, 'success', 'Get user success', {
         ...me.toJSON(),
-        static: {
-          used: staticQuota.data,
-          quota: env.get('STATIC_QUOTA'),
-        },
-        conversation: {
-          used: conversationQuota.data,
-          quota: env.get('CONVERSATION_QUOTA'),
+        quota: {
+          used: usedQuota.data,
+          quota: isGuest ? env.get('GUEST_QUOTA') : env.get('USER_QUOTA'),
         },
       })
     )
