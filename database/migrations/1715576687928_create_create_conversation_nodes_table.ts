@@ -15,6 +15,7 @@ export default class extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('video').nullable()
       table.string('video_url').nullable()
+      table.enum('status', ['pending', 'success', 'failed']).defaultTo('pending')
       table.enum('type', ['speech', 'video']).defaultTo('speech')
 
       table.timestamp('created_at')

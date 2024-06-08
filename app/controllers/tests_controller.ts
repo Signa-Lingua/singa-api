@@ -12,6 +12,7 @@ import { HTTP } from '#lib/constants/http'
 import TestqueueJob from '../jobs/testqueue_job.js'
 import queue from '@rlanz/bull-queue/services/main'
 import TestQueue from '#models/test_queue'
+import env from '#start/env'
 
 export default class TestsController {
   async test({ request, response }: HttpContext) {

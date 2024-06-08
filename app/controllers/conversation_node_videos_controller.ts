@@ -8,6 +8,9 @@ import { generateFileName } from '#utils/generator'
 import responseFormatter from '#utils/response_formatter'
 import { conversationNodeVideoValidator } from '#validators/conversation_translation'
 import type { HttpContext } from '@adonisjs/core/http'
+import PredictJob from '../jobs/predict_job.js'
+import { Status } from '#lib/constants/status'
+import { convertMultipartFileToFile } from '#utils/converter'
 
 export default class ConversationNodeVideosController {
   /**
@@ -51,8 +54,6 @@ export default class ConversationNodeVideosController {
       )
     }
 
-    // TODO: Request To Machine Learning Service
-
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
 
     const fileUrl = await googleCloudStorageService.save(
@@ -70,14 +71,24 @@ export default class ConversationNodeVideosController {
     }
 
     const conversationNode = await ConversationNode.create({
+      status: Status.PENDING,
       conversationTranslationId: conversationTranslation.id,
       userId,
       video: generatedFileName,
       videoUrl: fileUrl.data,
       type,
     })
+    const predictJob = new PredictJob()
 
-    // TODO: Add transcript to return response.
+    const files = await convertMultipartFileToFile(file)
+
+    predictJob.handle({
+      userId: userId!,
+      video: files,
+      conversationNodeId: conversationNode.id,
+      conversationTranslationId: conversationTranslation.id,
+    })
+
     // Require previous TODO
     return response.created(
       responseFormatter(

@@ -21,7 +21,16 @@ export const conversationNodeSpeechValidator = vine.compile(
   })
 )
 
+export const bulkDeleteConversationNodeValidator = vine.compile(
+  vine.object({
+    id: vine.array(vine.number()),
+  })
+)
+
 vine.messagesProvider = new SimpleMessagesProvider({
+  'id.required': 'ID is required',
+  'id.array': 'ID must be an array',
+  'id.number': 'ID must be a number',
   'title.required': 'Title is required',
   'title.maxLength': 'Title must be less than 255 characters',
   'type.literal': 'Type must be one of: {{allowedValues}}',

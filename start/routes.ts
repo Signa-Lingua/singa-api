@@ -28,6 +28,8 @@ const StaticTranslationsController = () => import('#controllers/static_translati
 const ConversationTranslationsController = () =>
   import('#controllers/conversation_translations_controller')
 const ConversationNodesController = () => import('#controllers/conversation_nodes_controller')
+const BulkDeleteConversationNodesController = () =>
+  import('#controllers/bulk_delete_conversation_nodes_controller')
 
 // Tests Routes
 router.get('/', ({ response }) => {
@@ -114,6 +116,12 @@ router
     ])
     router.put('/translation/conversation/:id', [ConversationTranslationsController, 'update'])
     router.delete('/translation/conversation/:id', [ConversationTranslationsController, 'destroy'])
+
+    // Bulk Delete Conversation Nodes
+    router.post('/translation/conversation/bulk/node', [
+      BulkDeleteConversationNodesController,
+      'destroy',
+    ])
 
     // Articles
     router.post('/articles', [ArticleController, 'store'])

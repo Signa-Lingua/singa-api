@@ -3,6 +3,7 @@ import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from './conversation_transcript.js'
+import { Status } from '#lib/constants/status'
 
 export default class ConversationNode extends BaseModel {
   @column({ isPrimary: true })
@@ -22,6 +23,9 @@ export default class ConversationNode extends BaseModel {
 
   @column()
   declare type: TranslationConversationNodeType
+
+  @column()
+  declare status: Status
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

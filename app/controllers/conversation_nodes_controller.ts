@@ -62,6 +62,12 @@ export default class ConversationNodesController {
       )
     }
 
+    const transcripts = await conversationNode.related('transcripts').query()
+
+    for (const transcript of transcripts) {
+      await transcript.delete()
+    }
+
     await conversationNode.delete()
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'Delete conversation node success'))
