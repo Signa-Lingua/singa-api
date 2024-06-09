@@ -27,6 +27,9 @@ const dbConfig = defineConfig({
         createRetryIntervalMillis: 30000,
         propagateCreateError: false,
       },
+      seeders: {
+        paths: ['database/seeders/main'],
+      },
     },
   },
 })
