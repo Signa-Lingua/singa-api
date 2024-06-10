@@ -10,6 +10,9 @@ import { generateFileName } from '#utils/generator'
 import { HTTP } from '#lib/constants/http'
 import env from '#start/env'
 import { resizeVideo } from '#services/ffmpeg_service'
+import PredictStaticJob from '../jobs/predict_static_job.js'
+import { convertMultipartFileToFile } from '#utils/converter'
+import { Status } from '#lib/constants/status'
 
 export default class StaticTranslationsController {
   /**
@@ -20,7 +23,7 @@ export default class StaticTranslationsController {
 
     const staticTranslations = await StaticTranslation.query()
       .where('user_id', userId!)
-      .select('id', 'title', 'videoUrl', 'createdAt', 'updatedAt')
+      .select('id', 'title', 'videoUrl', 'status', 'createdAt', 'updatedAt')
 
     return response.ok(
       responseFormatter(HTTP.OK, 'success', 'Get list of static translations', staticTranslations)
@@ -61,8 +64,6 @@ export default class StaticTranslationsController {
       )
     }
 
-    // TODO: Request To Machine Learning Service
-
     const generatedFileName = generateFileName(userId!, file.extname ? file.extname : 'mp4')
 
     const fileUrl = await googleCloudStorageService.save(
@@ -84,6 +85,17 @@ export default class StaticTranslationsController {
       video: generatedFileName,
       videoUrl: fileUrl.data,
       userId,
+      status: Status.PENDING,
+    })
+
+    const predictStaticJob = new PredictStaticJob()
+
+    const files = await convertMultipartFileToFile(file)
+
+    predictStaticJob.handle({
+      staticTranslationId: staticTranslation.id,
+      userId: userId!,
+      video: files,
     })
 
     return response.created(
@@ -105,7 +117,7 @@ export default class StaticTranslationsController {
     const staticTranslations = await StaticTranslation.query()
       .where('user_id', userId!)
       .where('id', params.id)
-      .select('id', 'title', 'videoUrl', 'createdAt', 'updatedAt')
+      .select('id', 'title', 'videoUrl', 'status', 'createdAt', 'updatedAt')
       .preload('transcripts', (query) => query.orderBy('timestamp', 'asc'))
       .first()
 

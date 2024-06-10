@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import StaticTranscript from './static_transcript.js'
+import { Status } from '#lib/constants/status'
 
 export default class StaticTranslation extends BaseModel {
   @column({ isPrimary: true })
@@ -19,6 +20,9 @@ export default class StaticTranslation extends BaseModel {
 
   @column()
   declare videoUrl: string
+
+  @column()
+  declare status: Status
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

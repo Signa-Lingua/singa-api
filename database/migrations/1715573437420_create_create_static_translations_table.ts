@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('video').nullable()
       table.string('video_url').notNullable()
-
+      table.enum('status', ['pending', 'success', 'failed']).defaultTo('pending')
       table.timestamp('created_at')
       table.timestamp('updated_at')
 
