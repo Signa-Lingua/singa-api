@@ -110,12 +110,9 @@ export default class TestsController {
   }
 
   async testGoogleCloudStorageMetadata({ request, response }: HttpContext) {
-    // const { fileName } = await request.validateUsing(fileDeleteValidator)
+    const { fileName } = await request.validateUsing(fileDeleteValidator)
 
-    const result = await googleCloudStorageService.getFileMedatata(
-      'static-translation',
-      'blahaj.mp4'
-    )
+    const result = await googleCloudStorageService.getFileMedatata('test', fileName)
 
     if (result.error) {
       return response.internalServerError(
