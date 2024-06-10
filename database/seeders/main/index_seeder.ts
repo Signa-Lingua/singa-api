@@ -8,6 +8,5 @@ export default class IndexSeeder extends BaseSeeder {
     await new (await import('#database/seeders/permission_seeder')).default(this.client).run()
     await new (await import('#database/seeders/role_permission_seeder')).default(this.client).run()
     await new (await import('#database/seeders/initial_seed_seeder')).default(this.client).run()
-    await new (await import('#database/seeders/article_seeder')).default(this.client).run()
   }
 }
