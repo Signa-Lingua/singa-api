@@ -18,13 +18,6 @@ const dbConfig = defineConfig({
         paths: ['database/migrations'],
       },
       pool: {
-        min: 100,
-        max: 10000,
-        createTimeoutMillis: 150000,
-        acquireTimeoutMillis: 150000,
-        idleTimeoutMillis: 600000,
-        reapIntervalMillis: 30000,
-        createRetryIntervalMillis: 30000,
         propagateCreateError: false,
       },
       seeders: {
