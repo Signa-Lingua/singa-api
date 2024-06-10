@@ -116,9 +116,15 @@ export default class ConversationNodeVideosController {
 
     const files = await convertMultipartFileToFile(file)
 
+    if (files.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', files.message)
+      )
+    }
+
     predictJob.handle({
       userId: userId!,
-      video: files,
+      video: files.data,
       conversationNodeId: conversationNode.id,
       conversationTranslationId: conversationTranslation.id,
     })
