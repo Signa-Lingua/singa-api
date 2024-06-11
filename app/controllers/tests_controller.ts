@@ -35,10 +35,6 @@ export default class TestsController {
       )
     }
 
-    // fs.existsSync(ffmpegResult.resizedVideoPath)
-    //   ? console.log(ffmpegResult.resizedVideoPath)
-    //   : console.log('file does not exist')
-
     const uploadedFile = await googleCloudStorageService.save(
       'test',
       ffmpegResult.resizedVideoPath,
@@ -52,10 +48,6 @@ export default class TestsController {
     }
 
     ffmpegResult.cleanupFile()
-
-    // fs.existsSync(ffmpegResult.resizedVideoPath)
-    //   ? console.log(ffmpegResult.resizedVideoPath)
-    //   : console.log('file does not exist')
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'File uploaded'))
   }
