@@ -64,7 +64,6 @@ export default class PredictStaticJob extends Job {
 
       if (normalError.response?.data.error) {
         logger.error(normalError.response?.data)
-        console.log(normalError.response?.data)
         return
       }
 
@@ -72,12 +71,10 @@ export default class PredictStaticJob extends Job {
 
       if (customError.response?.data.detail) {
         logger.error(customError.response?.data.detail)
-        console.log(customError.response?.data.detail)
         return
       }
 
       logger.error(error)
-      console.log(error)
       return
     }
   }
