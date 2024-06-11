@@ -92,10 +92,16 @@ export default class StaticTranslationsController {
 
     const files = await convertMultipartFileToFile(file)
 
+    if (files.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', files.message)
+      )
+    }
+
     predictStaticJob.handle({
       staticTranslationId: staticTranslation.id,
       userId: userId!,
-      video: files,
+      video: files.data,
     })
 
     return response.created(
