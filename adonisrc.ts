@@ -41,6 +41,7 @@ export default defineConfig({
     () => import('./app/providers/google_cloud_service_provider.js'),
     () => import('@adonisjs/bouncer/bouncer_provider'),
     () => import('@rlanz/bull-queue/queue_provider'),
+    () => import('@adonisjs/limiter/limiter_provider')
   ],
 
   /*
