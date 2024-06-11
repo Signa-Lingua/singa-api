@@ -27,14 +27,12 @@ export const apiThrottle = limiter.define('singa-api', (ctx) => {
   /**
    * Allow unauthenticated users to make 50 requests every 5 minutes
    */
-  return (
-    limiter
-      .allowRequests(50)
-      .every('5 minute')
-      .usingKey(`ip_${ctx.request.ip()}`)
-      // .blockFor('30 mins')
-      .limitExceeded((error) => {
-        responseFormatter(HTTP.TOO_MANY_REQUESTS, 'error', error.message)
-      })
-  )
+  return limiter
+    .allowRequests(50)
+    .every('5 minute')
+    .usingKey(`ip_${ctx.request.ip()}`)
+    .blockFor('30 mins')
+    .limitExceeded((error) => {
+      responseFormatter(HTTP.TOO_MANY_REQUESTS, 'error', error.message)
+    })
 })
