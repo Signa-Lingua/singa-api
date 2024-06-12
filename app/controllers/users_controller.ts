@@ -117,6 +117,7 @@ export default class UsersController {
    */
   async update({ auth, response, request }: HttpContext) {
     const userId = auth.use('jwt').user?.id
+    const isGuest = auth.use('jwt').user?.provider === null
 
     const { name, email, password, isSignUser, avatar } =
       await request.validateUsing(updateUserValidator)
@@ -187,15 +188,32 @@ export default class UsersController {
 
     await user.save()
 
+    const usedQuota = await googleCloudStorageService.getUserUsedQuota(userId!)
+
+    if (usedQuota.error) {
+      return response.internalServerError(
+        responseFormatter(HTTP.INTERNAL_SERVER_ERROR, 'error', usedQuota.message)
+      )
+    }
+
     const newUser = await User.query()
       .where('id', userId!)
       .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
+      .preload('role')
       .first()
 
-    return response.ok(responseFormatter(HTTP.OK, 'success', 'Update user success', newUser))
-  }
+    if (!newUser) {
+      return response.badRequest(responseFormatter(HTTP.BAD_REQUEST, 'error', 'User not found'))
+    }
 
-  async quota({ auth, response }: HttpContext) {
-    const userId = auth.use('jwt').user?.id
+    return response.ok(
+      responseFormatter(HTTP.OK, 'success', 'Get user success', {
+        ...newUser.toJSON(),
+        quota: {
+          used: usedQuota.data,
+          quota: isGuest ? env.get('GUEST_QUOTA') : env.get('USER_QUOTA'),
+        },
+      })
+    )
   }
 }
