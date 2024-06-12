@@ -10,8 +10,6 @@
 */
 
 import limiter from '@adonisjs/limiter/services/main'
-import responseFormatter from '#utils/response_formatter'
-import { HTTP } from '#lib/constants/http'
 
 // export const throttle = limiter.define('global', () => {
 //   return limiter.allowRequests(30).every('5 minute')
@@ -33,6 +31,6 @@ export const apiThrottle = limiter.define('singa-api', (ctx) => {
     .usingKey(`ip_${ctx.request.ip()}`)
     .blockFor('30 mins')
     .limitExceeded((error) => {
-      responseFormatter(HTTP.TOO_MANY_REQUESTS, 'error', error.message)
+      return error.message
     })
 })
