@@ -3,6 +3,7 @@ import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors as coreError } from '@adonisjs/core'
 import { errors as authError } from '@adonisjs/auth'
 import { errors as dbError } from '@adonisjs/lucid'
+import { errors as limiterError } from '@adonisjs/limiter'
 import { HTTP } from '#lib/constants/http'
 import responseFormatter from '#utils/response_formatter'
 
@@ -41,6 +42,12 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     if (error instanceof dbError.E_ROW_NOT_FOUND) {
       return ctx.response.notFound(
         responseFormatter(HTTP.NOT_FOUND, 'error', 'Record not found, please check the params')
+      )
+    }
+
+    if (error instanceof limiterError.E_TOO_MANY_REQUESTS) {
+      return ctx.response.tooManyRequests(
+        responseFormatter(HTTP.TOO_MANY_REQUESTS, 'error', 'Too many requests')
       )
     }
 
