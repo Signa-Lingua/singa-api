@@ -198,7 +198,7 @@ export default class UsersController {
 
     const newUser = await User.query()
       .where('id', userId!)
-      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'createdAt', 'updatedAt')
+      .select('id', 'name', 'email', 'avatarUrl', 'isSignUser', 'roleId', 'createdAt', 'updatedAt')
       .preload('role')
       .first()
 
