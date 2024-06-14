@@ -16,17 +16,12 @@ export default class AuthController {
 
     const token = await auth.use('jwt').generateWithRefreshToken(user)
 
-    const oldToken = await Authentication.query().where('user_id', user.id).first()
+    // const oldToken = await Authentication.query().where('user_id', user.id).first()
 
-    if (oldToken) {
-      oldToken.token = token.refreshToken
-      await oldToken.save()
-    } else {
-      await Authentication.create({
-        token: token.refreshToken,
-        userId: user.id,
-      })
-    }
+    await Authentication.create({
+      token: token.refreshToken,
+      userId: user.id,
+    })
 
     return response.ok(responseFormatter(HTTP.OK, 'success', 'Login success', token))
   }
@@ -37,14 +32,6 @@ export default class AuthController {
    */
   async update({ auth, request, response }: HttpContext) {
     const { token } = await request.validateUsing(updateAccessTokenValidator)
-
-    const oldToken = await Authentication.query().where('token', token).first()
-
-    if (!oldToken) {
-      return response.badRequest(
-        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Invalid access token')
-      )
-    }
 
     const user = await auth.use('jwt').getUserByToken(token)
 
@@ -59,15 +46,10 @@ export default class AuthController {
    * Delete record
    * delete refresh token
    */
-  async destroy({ auth, response, request }: HttpContext) {
-    const user = auth.use('jwt').user?.id
-
+  async destroy({ response, request }: HttpContext) {
     const { refreshToken } = await request.validateUsing(refreshTokenValidator)
 
-    const token = await Authentication.query()
-      .where('token', refreshToken)
-      .andWhere('user_id', user!)
-      .first()
+    const token = await Authentication.query().where('token', refreshToken).first()
 
     if (!token) {
       return response.badRequest(
