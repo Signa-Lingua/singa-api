@@ -63,42 +63,45 @@ router.get('/login/google', [GoogleAuthsController, 'index'])
 router.get('/login/google/callback', [GoogleAuthsController, 'store'])
 
 // Public Articles
-router.get('/articles', [ArticleController, 'index'])
-router.get('/articles/:id', [ArticleController, 'show'])
+router.get('/articles', [ArticleController, 'index']).use(apiThrottle)
+router.get('/articles/:id', [ArticleController, 'show']).use(apiThrottle)
 
-router.get('/uploads/article/*', async ({ request, response }) => {
-  const filePath = request.param('*').join(sep)
-  const normalizedPath = normalize(filePath)
+router
+  .get('/uploads/article/*', async ({ request, response }) => {
+    const filePath = request.param('*').join(sep)
+    const normalizedPath = normalize(filePath)
 
-  if (PATH_TRAVERSAL_REGEX.test(normalizedPath)) {
-    return response.badRequest('Malformed path')
-  }
+    if (PATH_TRAVERSAL_REGEX.test(normalizedPath)) {
+      return response.badRequest('Malformed path')
+    }
 
-  const absolutePath = app.makePath('uploads/article', normalizedPath)
-  return response.download(absolutePath)
-})
+    const absolutePath = app.makePath('uploads/article', normalizedPath)
+    return response.download(absolutePath)
+  })
+  .use(apiThrottle)
 
 router
   .group(() => {
     // For Fetching Avatar
-    router.get('/uploads/avatar/*', async ({ request, response }) => {
-      const filePath = request.param('*').join(sep)
-      const normalizedPath = normalize(filePath)
+    router
+      .get('/uploads/avatar/*', async ({ request, response }) => {
+        const filePath = request.param('*').join(sep)
+        const normalizedPath = normalize(filePath)
 
-      if (PATH_TRAVERSAL_REGEX.test(normalizedPath)) {
-        return response.badRequest('Malformed path')
-      }
+        if (PATH_TRAVERSAL_REGEX.test(normalizedPath)) {
+          return response.badRequest('Malformed path')
+        }
 
-      const absolutePath = app.makePath('uploads/avatar', normalizedPath)
-      return response.download(absolutePath)
-    })
+        const absolutePath = app.makePath('uploads/avatar', normalizedPath)
+        return response.download(absolutePath)
+      })
+      .use(apiThrottle)
 
     // Auth
     router.post('/logout', [AuthController, 'destroy'])
 
     // Users
     router.get('/users/me', [UsersController, 'index']).use(apiThrottle)
-    router.get('/users/quota', [UsersController, 'quota']).use(apiThrottle)
     router.put('/users/me', [UsersController, 'update']).use(apiThrottle)
 
     // Static Translation Multiple

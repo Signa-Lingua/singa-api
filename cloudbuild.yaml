@@ -6,11 +6,11 @@ steps:
         '--build-arg',
         'NODE_VERSION=20.12.0',
         '-t',
-        'asia-southeast2-docker.pkg.dev/singa-423208/singa-backend/singa-api:0.0.5',
+        'asia-southeast2-docker.pkg.dev/singa-423208/singa-backend/singa-api:0.0.7',
         '.',
       ]
     env:
       - DOCKER_BUILDKIT=1
 
 images:
-  - 'asia-southeast2-docker.pkg.dev/singa-423208/singa-backend/singa-api:0.0.5'
+  - 'asia-southeast2-docker.pkg.dev/singa-423208/singa-backend/singa-api:0.0.7'
