@@ -23,6 +23,7 @@ export async function resizeVideo(
       // Save resized video to tmpResizedFile.path
       ffmpeg(filePath)
         .size(dimension)
+        .noAudio()
         .format('mp4')
         .on('end', () => {
           resolve({
