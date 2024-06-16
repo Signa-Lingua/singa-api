@@ -10,7 +10,7 @@ import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import ConversationTranslation from './conversation_translation.js'
 import Role from './role.js'
 
-const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+const AuthFinder = withAuthFinder(() => hash.use('argon2'), {
   uids: ['email'],
   passwordColumnName: 'password',
 })
