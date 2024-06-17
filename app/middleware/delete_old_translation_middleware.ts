@@ -16,23 +16,18 @@ export default class DeleteOldTranslationMiddleware {
 
     // Get all guests
     const guests = await User.query().whereNull('provider')
+    const guestId = guests.map((guest) => guest.id)
 
     // Get all old translations
     const oldStaticTranslations = await StaticTranslation.query()
       .where('createdAt', '<', olderThan)
-      .whereIn(
-        'userId',
-        guests.map((guest) => guest.id)
-      )
+      .whereIn('userId', guestId)
     const oldConversationTranslations = await ConversationTranslation.query()
       .preload('conversationNodes', (query) => {
         query.select('id', 'video')
       })
       .where('createdAt', '<', olderThan)
-      .whereIn(
-        'userId',
-        guests.map((guest) => guest.id)
-      )
+      .whereIn('userId', guestId)
 
     try {
       oldStaticTranslations.forEach(async (translation) => {
