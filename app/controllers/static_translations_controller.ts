@@ -108,7 +108,7 @@ export default class StaticTranslationsController {
       responseFormatter(
         HTTP.CREATED,
         'success',
-        'Create static translation success',
+        'Static translation request submitted. Please wait for the result',
         staticTranslation
       )
     )
