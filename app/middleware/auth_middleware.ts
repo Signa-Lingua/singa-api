@@ -48,7 +48,7 @@ export default class AuthMiddleware {
 
       ctx.request.request.headers['authorization'] = `Bearer ${newToken.token}`
     } catch (error) {
-      return ctx.response.unauthorized(responseFormatter(401, 'error', error.message))
+      return ctx.response.unauthorized(responseFormatter(401, 'error', 'Unauthorized access'))
     }
 
     await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
