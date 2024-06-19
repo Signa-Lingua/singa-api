@@ -19,7 +19,6 @@ const GoogleAuthsController = () => import('#controllers/google_auths_controller
 const GithubAuthsController = () => import('#controllers/github_auths_controller')
 const UsersController = () => import('#controllers/users_controller')
 const AuthController = () => import('#controllers/auth_controller')
-const TestsController = () => import('#controllers/tests_controller')
 const ArticleController = () => import('#controllers/articles_controller')
 const ConversationNodeVideosController = () =>
   import('#controllers/conversation_node_videos_controller')
@@ -38,15 +37,6 @@ router
     response.ok(responseFormatter(HTTP.OK, 'success', 'Api is up and running'))
   })
   .use(apiThrottle)
-router.post('/test/file', [TestsController, 'test']).use(apiThrottle)
-router.post('/test', [TestsController, 'testFileUpload']).use(apiThrottle)
-router.delete('/test', [TestsController, 'testFileDelete']).use(apiThrottle)
-router.post('/test/gcp', [TestsController, 'testGoogleCloudStorage']).use(apiThrottle)
-router.delete('/test/gcp', [TestsController, 'testGoogleCloudStorageDelete']).use(apiThrottle)
-router
-  .get('/test/gcp/metadata', [TestsController, 'testGoogleCloudStorageMetadata'])
-  .use(apiThrottle)
-router.get('/test/queue', [TestsController, 'testQueueSystem']).use(apiThrottle)
 
 // Auth
 router.post('/login', [AuthController, 'create'])

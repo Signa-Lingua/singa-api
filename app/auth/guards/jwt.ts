@@ -54,7 +54,7 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
   async generate(user: UserProvider[typeof symbols.PROVIDER_REAL_USER]) {
     const providerUser = await this.#userProvider.createUserForGuard(user)
     const token = jwt.sign({ userId: providerUser.getId() }, this.#options.secret, {
-      expiresIn: '2h',
+      expiresIn: '24h',
     })
 
     return {
@@ -87,7 +87,7 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
   async generateWithRefreshToken(user: UserProvider[typeof symbols.PROVIDER_REAL_USER]) {
     const providerUser = await this.#userProvider.createUserForGuard(user)
     const token = jwt.sign({ userId: providerUser.getId() }, this.#options.secret, {
-      expiresIn: '2h',
+      expiresIn: '24h',
     })
     const refreshToken = jwt.sign({ userId: providerUser.getId() }, this.#options.secret)
 
@@ -119,6 +119,29 @@ export class JwtGuard<UserProvider extends JwtUserProviderContract<unknown>>
       token,
       refreshToken,
     }
+  }
+
+  /**
+   * Decode the JWT token and return the user instance and ignore expiration
+   */
+  async getUserByExpiredToken(
+    token: string
+  ): Promise<UserProvider[typeof symbols.PROVIDER_REAL_USER]> {
+    const payload = jwt.verify(token, this.#options.secret, { ignoreExpiration: true })
+    if (typeof payload !== 'object' || !('userId' in payload)) {
+      throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+        guardDriverName: this.driverName,
+      })
+    }
+
+    const providerUser = await this.#userProvider.findById(payload.userId)
+    if (!providerUser) {
+      throw new errors.E_UNAUTHORIZED_ACCESS('Unauthorized access', {
+        guardDriverName: this.driverName,
+      })
+    }
+
+    return providerUser.getOriginal()
   }
 
   /**
