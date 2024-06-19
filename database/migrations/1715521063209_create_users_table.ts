@@ -21,6 +21,8 @@ export default class extends BaseSchema {
 
       // index
       table.index(['id'], 'users_id_index')
+      table.index(['email'], 'users_email_index')
+      table.index(['role_id'], 'users_role_id_index')
     })
   }
 

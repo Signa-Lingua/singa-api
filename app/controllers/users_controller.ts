@@ -122,6 +122,16 @@ export default class UsersController {
     const { name, email, password, isSignUser, avatar } =
       await request.validateUsing(updateUserValidator)
 
+    if (email) {
+      const isEmailAvailable = await User.query().where('email', email).first()
+
+      if (isEmailAvailable) {
+        return response.badRequest(
+          responseFormatter(HTTP.BAD_REQUEST, 'error', 'Email already registered')
+        )
+      }
+    }
+
     const user = await User.query().where('id', userId!).first()
 
     if (!user) {
