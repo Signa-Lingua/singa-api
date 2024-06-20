@@ -154,7 +154,9 @@ export default class UsersController {
         }
       }
 
-      user.password = await hash.make(password)
+      user.password = password
+
+      await user.save()
     }
 
     // if user update avatar
