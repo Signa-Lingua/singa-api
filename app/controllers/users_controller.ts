@@ -101,6 +101,14 @@ export default class UsersController {
       )
     }
 
+    const checkEmail = await User.query().where('email', email).first()
+
+    if (checkEmail) {
+      return response.badRequest(
+        responseFormatter(HTTP.BAD_REQUEST, 'error', 'Email already registered')
+      )
+    }
+
     await User.create({
       name,
       email,
