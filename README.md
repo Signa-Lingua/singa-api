@@ -1,5 +1,16 @@
 ## Singa API
 
+## Tech Used
+
+- AdonisJS
+- PostgreSQL
+- FFmpeg
+- Redis
+
+## API Documentation
+
+[spec.md](./spec.md)
+
 ## Setup Instructions
 
 1. Clone this repository
@@ -18,40 +29,39 @@ cd singa-api
 
 ### Prerequisites
 
-1. You have a Google Cloud Platform account and have installed the Google Cloud SDK on your local machine.
-2. You have enabled the Cloud Run, Artifact Registry, and Cloud Build APIs.
-3. You have created a service account to use for the Cloud Run service.
-4. You have created a Cloud Storage bucket to store the logs.
+#### For Google Cloud Environment
 
-<details open>
-<summary>Do it manually from local machine</summary>
+1. You have a Google Cloud Platform account, Google Project, and have installed the Google Cloud SDK on your local machine.
+2. Setup ADC (Application Default Credentials) on your local machine.
 
-```sh
-gcloud builds submit --substitutions _SERVICE_ACCOUNT=<your-service-account>,_LOGBUCKET=<your-log-bucket-name>
-```
+   ```sh
+   gcloud auth application-default login
+   ```
 
-</details>
+3. You have created a Postgresql instance on Cloud SQL, and have created a database and user for the application.
+4. You have created a Memorystore Redis instance
+5. You have created a Google Cloud Storage Bucket to store the logs.
+6. You have created a service account to use for the Cloud Run and Cloud Build. It should have the following permission
 
-<!-- <details open>
-<summary>Do it with Cloud Build trigger</summary>
+   <details>
+   <summary>Click to expand</summary>
 
-1. Create a Cloud Build trigger
+   - Cloud Run Admin
+   - Cloud SQL Instance User
+   - Secret Manager Secret Accessor
+   - Service Account User
+   - Storage Object Admin
+   - Cloud Build Service Account
 
-```sh
-gcloud builds triggers create github \
---region=asia-southeast2 \
---repo-name singa-api \
---repo-owner Singa-Lingua \
---branch-pattern=master \
---build-config=cloudbuild.yaml \
---service-account=<your-service-account> \
---include-logs-with-status
-```
+   </details>
 
-2. Push the code to the repository
+7. You have created a Cloud Storage bucket to store the logs.
 
-```sh
-git push origin <your-branch>
-```
+   <details open>
+   <summary>Do it manually from gcloud CLI</summary>
 
-</details> -->
+   ```sh
+   gcloud builds submit --substitutions _VPC_CONNECTOR=<your-vpc-connector>,_SERVICE_ACCOUNT=<your-service-account>,_LOGBUCKET=<your-log-bucket-name>
+   ```
+
+   </details>
