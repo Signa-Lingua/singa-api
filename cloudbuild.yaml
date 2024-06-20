@@ -1,4 +1,5 @@
 steps:
+  # Build the image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -6,11 +7,119 @@ steps:
         '--build-arg',
         'NODE_VERSION=20.12.0',
         '-t',
-        'asia-southeast2-docker.pkg.dev/singa-423208/singa-backend/singa-api:0.0.7',
+        'asia-southeast2-docker.pkg.dev/$PROJECT_ID/singa-backend/singa-api:latest',
         '.',
       ]
-    env:
-      - DOCKER_BUILDKIT=1
+    env: DOCKER_BUILDKIT=1
 
-images:
-  - 'asia-southeast2-docker.pkg.dev/singa-423208/singa-backend/singa-api:0.0.7'
+  # Push the image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/singa-backend/singa-api:latest']
+
+  # Deploy the new image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+        'run',
+        'deploy',
+        'singa-api',
+        '--image',
+        'asia-southeast2-docker.pkg.dev/$PROJECT_ID/singa-backend/singa-api:latest',
+        '--region',
+        'asia-southeast2',
+        '--min-instances',
+        $_MIN_INSTANCES,
+        '--platform',
+        'managed',
+        '--allow-unauthenticated',
+        '--port',
+        $_CUSTOM_PORT,
+        '--service-account',
+        $SERVICE_ACCOUNT_EMAIL,
+        # Set required env
+        '--set-env-vars',
+        'TZ=UTC',
+        '--set-env-vars',
+        'HOST=${_HOST}',
+        '--set-env-vars',
+        'LOG_LEVEL=info',
+        '--set-env-vars',
+        'NODE_ENV=production',
+        '--set-env-vars',
+        'ADMINS=1',
+        '--set-env-vars',
+        'LIMITER_STORE=database',
+        '--set-env-vars',
+        'DRIVE_ROOT=${_DRIVE_ROOT}',
+        '--set-env-vars',
+        'DRIVE_NAME=${_DRIVE_NAME}',
+        '--set-env-vars',
+        'APP_URL=http://${_HOST}:${_CUSTOM_PORT}',
+        '--set-env-vars',
+        'STATIC_STORAGE_PATH=static-translation',
+        '--set-env-vars',
+        'CONVERSATION_STORAGE_PATH=conversation-translation',
+        '--set-env-vars',
+        'STATIC_QUOTA=10485760', # in bytes (10MB)
+        '--set-env-vars',
+        'GUEST_QUOTA=104857600', # in bytes (100MB)
+        '--set-env-vars',
+        'USER_QUOTA=1073741824', # in bytes (1024MB/1GB)
+        '--set-env-vars',
+        'DB_PORT=5432',
+        '--set-env-vars',
+        'QUEUE_REDIS_PORT=6379',
+        '--set-env-vars',
+        'GOOGLE_CLOUD_STORAGE_STORAGE_PATH=${_DRIVE_NAME}',
+        # Set the env secrets
+        '--set-secrets',
+        'ADMIN_PASSWORD=admin-password:latest',
+        '--set-secrets',
+        'APP_KEY=app-key:latest',
+        '--set-secrets',
+        'DB_HOST=postgresql-db-host:latest',
+        '--set-secrets',
+        'DB_USER=postgresql-db-user:latest',
+        '--set-secrets',
+        'DB_PASSWORD=postgresql-db-password:latest',
+        '--set-secrets',
+        'DB_DATABASE=postgresql-db-database:latest',
+        '--set-secrets',
+        'QUEUE_REDIS_HOST=redis-host:latest',
+        '--set-secrets',
+        'GITHUB_CLIENT_ID=github-client-id:latest',
+        '--set-secrets',
+        'GITHUB_CLIENT_SECRET=github-client-secret:latest',
+        '--set-secrets',
+        'GOOGLE_CLIENT_ID=google-client-id:latest',
+        '--set-secrets',
+        'GOOGLE_CLIENT_SECRET=google-client-secret:latest',
+        '--set-secrets',
+        'GITHUB_CLIENT_CALLBACK_URL=github-client-callback-url:latest',
+        '--set-secrets',
+        'GOOGLE_CLIENT_CALLBACK_URL=google-client-callback-url:latest',
+        '--set-secrets',
+        'GOOGLE_CLOUD_STORAGE_BUCKET_NAME=bucket-name:latest',
+        '--set-secrets',
+        'PREDICT_API_HOST=predict-api-host:latest',
+      ]
+
+# Configure build log
+logsBucket: gs://$_LOGBUCKET_NAME
+serviceAccount: 'projects/$PROJECT_ID/serviceAccounts/$_SERVICE_ACCOUNT'
+
+# Substitution value
+substitutions:
+  _HOST: '0.0.0.0'
+  _CUSTOM_PORT: '3333'
+  _MIN_INSTANCES: '1'
+  _DRIVE_ROOT: ./uploads
+  _DRIVE_NAME: uploads
+  _SERVICE_ACCOUNT: your-sa-for-build
+  _LOGBUCKET_NAME: your-log-bucket-name
+
+options:
+  logging: GCS_ONLY
+  dynamicSubstitutions: true
+
+images: 'asia-southeast2-docker.pkg.dev/$PROJECT_ID/singa-backend/singa-api:latest'
