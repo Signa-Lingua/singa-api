@@ -1,15 +1,5 @@
 # Project: Singa Api
 
-## End-point: Api Status
-
-### Method: GET
-
-> ```
-> {{protocol}}://{{host}}:{{port}}/
-> ```
-
-⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
-
 # 📁 Collection: Auth
 
 ## End-point: Register
@@ -164,6 +154,12 @@
 
 | Param | value | Type |
 | ----- | ----- | ---- |
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 200
 
@@ -345,6 +341,12 @@
 > {{protocol}}://{{host}}:{{port}}/translation/static
 > ```
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 200
 
 ```json
@@ -382,6 +384,12 @@
 > ```
 > {{protocol}}://{{host}}:{{port}}/translation/static/1
 > ```
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 200
 
@@ -468,6 +476,12 @@
 | ----- | ---------------------------------------------- | ---- |
 | title | New Static Translation                         | text |
 | file  | /C:/Users/Andrien/Desktop/code/sand/blahaj.mp4 | file |
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 201
 
@@ -557,6 +571,12 @@
 | ----- | ------------- | ---- |
 | title | updated value | text |
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 200
 
 ```json
@@ -601,6 +621,12 @@
 > {{protocol}}://{{host}}:{{port}}/translation/static/1
 > ```
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: undefined
 
 ```json
@@ -637,6 +663,12 @@
 > {{protocol}}://{{host}}:{{port}}/translation/conversation
 > ```
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 200
 
 ```json
@@ -672,6 +704,12 @@
 > ```
 > {{protocol}}://{{host}}:{{port}}/translation/conversation/1
 > ```
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 200
 
@@ -759,6 +797,12 @@
 | ----- | ---------------------- | ---- |
 | title | New Static Translation | text |
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 201
 
 ```json
@@ -808,6 +852,12 @@
 | ----- | --------------------- | ---- |
 | text  | speech to text result | text |
 | type  | speech                | text |
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 201
 
@@ -885,6 +935,12 @@
 | ----- | ---------------------------------------------- | ---- |
 | file  | /C:/Users/Andrien/Desktop/code/sand/blahaj.mp4 | file |
 | type  | video                                          | text |
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 201
 
@@ -966,6 +1022,12 @@
 | ----- | ------------- | ---- |
 | title | updated value | text |
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 200
 
 ```json
@@ -1009,6 +1071,12 @@
 > {{protocol}}://{{host}}:{{port}}/translation/conversation/1
 > ```
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: undefined
 
 ```json
@@ -1037,11 +1105,24 @@
 
 ## End-point: Bulk Delete
 
-### Method: GET
+### Method: DELETE
 
 > ```
-> undefined
+> {{protocol}}://{{host}}:{{port}}/translation/conversation/bulk/node
 > ```
+
+### Body formdata
+
+| Param | value | Type |
+| ----- | ----- | ---- |
+| id[0] | 1     | text |
+| id[1] | 2     | text |
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 200
 
@@ -1064,6 +1145,12 @@
 > ```
 > undefined
 > ```
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 200
 
@@ -1214,6 +1301,12 @@
 | description | Description                        | text |
 | imageUrl    | https://www.example.com/image2.jpg | text |
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 201
 
 ```json
@@ -1276,6 +1369,12 @@
 | description | Updated Description                | text |
 | imageUrl    | https://www.example.com/image1.jpg | text |
 
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
+
 ### Response: 200
 
 ```json
@@ -1317,6 +1416,12 @@
 > ```
 > {{protocol}}://{{host}}:{{port}}/articles/1
 > ```
+
+### 🔑 Authentication bearer
+
+| Param | value         | Type   |
+| ----- | ------------- | ------ |
+| token | {{userToken}} | string |
 
 ### Response: 200
 
