@@ -9,6 +9,7 @@ import { TranslationConversationNodeType } from '#lib/constants/translation'
 import ConversationTranscript from '#models/conversation_transcript'
 import Role from '#models/role'
 import { Status } from '#lib/constants/status'
+import env from '#start/env'
 
 export default class extends BaseSeeder {
   async run() {
@@ -22,7 +23,7 @@ export default class extends BaseSeeder {
       {
         name: 'Admin',
         email: 'admin@admin.com',
-        password: 'admin12345',
+        password: env.get('ADMIN_PASSWORD'),
         provider: SocialProvider.PASSWORD,
         isSignUser: true,
         roleId: adminRole.id,
