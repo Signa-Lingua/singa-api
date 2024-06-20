@@ -73,6 +73,8 @@ steps:
         'GOOGLE_CLOUD_STORAGE_STORAGE_PATH=${_DRIVE_NAME}',
         # Set the env secrets
         '--set-secrets',
+        'ADMIN_PASSWORD=admin-password:latest',
+        '--set-secrets',
         'APP_KEY=app-key:latest',
         '--set-secrets',
         'DB_HOST=postgresql-db-host:latest',
