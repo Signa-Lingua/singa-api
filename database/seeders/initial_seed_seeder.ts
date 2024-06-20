@@ -196,7 +196,7 @@ export default class extends BaseSeeder {
         description:
           '<p class="text-inherit">American Sign Language (ASL) is no longer confined to the deaf and hard-of-hearing communities. In today\'s diverse workplaces, fluency in ASL offers a valuable asset, fostering inclusivity and effective communication for both deaf and hearing employees. This article explores the growing importance of ASL in professional settings, highlighting the benefits it brings to employers and employees alike.</p><p class="text-inherit"></p>',
         imageUrl:
-          'https://storage.googleapis.com/singa-test-bucket/uploads/article/article-Ov4VgcK9BTwk95r3.jpg',
+          'https://storage.googleapis.com/singa-bucket/uploads/article/article-Ov4VgcK9BTwk95r3.jpg',
         createdBy: 1,
       },
       {
@@ -204,7 +204,7 @@ export default class extends BaseSeeder {
         description:
           '<p class="text-inherit">American Sign Language (ASL) is more than just a collection of hand gestures; it\'s the cornerstone of a vibrant deaf culture rich in history, traditions, and artistic expression. While ASL allows communication between deaf and signing individuals, understanding deaf culture fosters a deeper appreciation for the unique experiences and perspectives of the deaf community.</p><p class="text-inherit">This article explores the beautiful tapestry of deaf culture, examining its historical development, the core values it embodies, and the ways ASL plays a central role in its expression.</p>',
         imageUrl:
-          'https://storage.googleapis.com/singa-test-bucket/uploads/article/article-SRMOmKr8GBeQfDoE.jpg',
+          'https://storage.googleapis.com/singa-bucket/uploads/article/article-SRMOmKr8GBeQfDoE.jpg',
         createdBy: 1,
       },
       {
@@ -212,7 +212,7 @@ export default class extends BaseSeeder {
         description:
           '<p class="text-inherit">American Sign Language (ASL) isn\'t just a beautiful and expressive language for deaf and hard-of-hearing communities. Studies have revealed a fascinating connection between learning ASL and a multitude of cognitive benefits. This article delves into the world of ASL, exploring how engaging with this unique language can enhance memory, boost problem-solving skills, and even improve spatial reasoning.</p>',
         imageUrl:
-          'https://storage.googleapis.com/singa-test-bucket/uploads/article/article-Ov4VgcK9BTwk95r3.jpg',
+          'https://storage.googleapis.com/singa-bucket/uploads/article/article-Ov4VgcK9BTwk95r3.jpg',
         createdBy: 1,
       },
     ])
