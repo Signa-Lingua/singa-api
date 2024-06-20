@@ -34,6 +34,10 @@ steps:
         '--allow-unauthenticated',
         '--port',
         $_CUSTOM_PORT,
+        '--vpc-connector',
+        $_VPC_CONNECTOR,
+        '--vpc-egress',
+        'all-traffic',
         '--service-account',
         $SERVICE_ACCOUNT_EMAIL,
         # Set required env
@@ -117,6 +121,7 @@ substitutions:
   _DRIVE_NAME: uploads
   _SERVICE_ACCOUNT: your-sa-for-build
   _LOGBUCKET_NAME: your-log-bucket-name
+  _VPC_CONNECTOR: your-vpc-connector
 
 options:
   logging: GCS_ONLY

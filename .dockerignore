@@ -68,6 +68,8 @@ uploads
 # Other
 syncRepo.bat
 
-# Cloud Storage Account Key
-cloud-storage-key.json
-singa-prod-sa-key.json
+# Any Key files
+*key.json
+
+# Api spec
+spec.md
