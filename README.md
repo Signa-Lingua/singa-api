@@ -58,11 +58,13 @@ cd singa-api
 
 7. You have created a Cloud Storage bucket to store the logs.
 
-   <details open>
-   <summary>Do it manually from gcloud CLI</summary>
+### Deploy using the following command
 
-   ```sh
-   gcloud builds submit --substitutions _VPC_CONNECTOR=<your-vpc-connector>,_SERVICE_ACCOUNT=<your-service-account>,_LOGBUCKET=<your-log-bucket-name>
-   ```
+<details open>
+<summary>Do it manually from gcloud CLI</summary>
 
-   </details>
+```sh
+gcloud builds submit --substitutions _VPC_CONNECTOR=<your-vpc-connector>,_SERVICE_ACCOUNT=<your-service-account>,_LOGBUCKET=<your-log-bucket-name>
+```
+
+</details>
