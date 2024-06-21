@@ -13,7 +13,7 @@ export default class extends BaseSchema {
         .inTable('conversation_nodes')
         .onDelete('CASCADE')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      table.time('timestamp').notNullable().defaultTo('00:00:00.000')
+      table.text('timestamp').notNullable().defaultTo('00:00:00:000')
       table.text('text').notNullable()
 
       table.timestamp('created_at')
