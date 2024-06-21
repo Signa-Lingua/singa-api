@@ -10,7 +10,8 @@
 ## API Documentation
 
 - [API Endpoint Documentation Markdown](./spec.md)
-- [API Endpoint Swagger Documentation](https://app.swaggerhub.com/apis-docs/arnnied03/singa-api/1.0.0)
+- [API Endpoint Swagger Documentation](https://app.swaggerhub.com/apis-docs/RIZRMDHNWORK/singa-api/1.0.1)
+
 
 ## Setup Instructions
 
