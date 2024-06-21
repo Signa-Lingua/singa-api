@@ -92,19 +92,19 @@ export default class extends BaseSeeder {
 
     const transcriptMock = [
       {
-        timestamp: '00:00:01.123',
+        timestamp: '00:00:01:123',
         text: 'First',
       },
       {
-        timestamp: '00:00:02.123',
+        timestamp: '00:00:02:123',
         text: 'Second',
       },
       {
-        timestamp: '00:00:05.123',
+        timestamp: '00:00:05:123',
         text: 'Third',
       },
       {
-        timestamp: '00:00:20.123',
+        timestamp: '00:00:20:123',
         text: 'Fourth',
       },
     ]
@@ -182,7 +182,7 @@ export default class extends BaseSeeder {
         conversationTranscript.push({
           userId: item.userId,
           conversationNodeId: i + 1,
-          timestamp: '00:00:00.123',
+          timestamp: '00:00:00:123',
           text: 'Speech to text result',
         })
       }
