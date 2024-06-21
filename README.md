@@ -68,3 +68,7 @@ gcloud builds submit --substitutions _VPC_CONNECTOR=<your-vpc-connector>,_SERVIC
 ```
 
 </details>
+
+## Infrastructure Overview
+
+![](./infrastructure.png)
