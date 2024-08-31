@@ -71,7 +71,7 @@
     "@rlanz/bull-queue": "^3.0.0",
     "@vinejs/vine": "^2.1.0",
     "argon2": "^0.40.3",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "fluent-ffmpeg": "^2.1.3",
     "jsonwebtoken": "^9.0.2",
